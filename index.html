@@ -1,53 +1,20 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Preconnect and preload for better performance -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown to PDF Converter - README</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-
-  <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';">
-  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-  <meta http-equiv="X-Frame-Options" content="DENY" />
-  <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=()" />
-
-  <!-- SEO Meta Tags -->
-  <title>Markdown to PDF Converter | Transform AI Conversations to Professional PDFs</title>
-  <meta name="description" content="Convert your Markdown and AI conversations into beautifully formatted PDFs instantly. Free online tool with real-time preview and professional formatting." />
-  <meta name="keywords" content="markdown to pdf, convert markdown, AI conversation converter, PDF generator, markdown converter, document formatter" />
-  <meta name="author" content="Gauthier Bros" />
-
-  <!-- Open Graph / Social Media -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Markdown to PDF Converter" />
-  <meta property="og:description" content="Transform your Markdown and AI conversations into professional PDFs instantly." />
-  <meta property="og:url" content="https://mark2pdf.com" />
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Markdown to PDF Converter" />
-  <meta name="twitter:description" content="Transform your Markdown and AI conversations into professional PDFs instantly." />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png" />
-
-  <!-- Font and CSS -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/github.min.css">
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
   <style>
     :root {
       --primary: #2563eb;
+      --primary-light: #3b82f6;
       --primary-dark: #1d4ed8;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --error: #ef4444;
+      --secondary: #059669;
+      --accent: #f59e0b;
       --gray-50: #f9fafb;
       --gray-100: #f3f4f6;
       --gray-200: #e5e7eb;
@@ -58,6 +25,10 @@
       --gray-700: #374151;
       --gray-800: #1f2937;
       --gray-900: #111827;
+      --red: #ef4444;
+      --green: #10b981;
+      --yellow: #f59e0b;
+      --blue: #3b82f6;
       --radius-sm: 0.25rem;
       --radius: 0.5rem;
       --radius-lg: 0.75rem;
@@ -65,1877 +36,832 @@
       --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
       --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      --transition: all 0.2s ease;
-      --content-width: 1200px;
-      --header-height: 80px;
-      --footer-height: 60px;
+      --max-width: 1000px;
+      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
     }
 
-    /* Dark mode colors */
-    [data-theme="dark"] {
-      --primary: #3b82f6;
-      --primary-dark: #60a5fa;
-      --gray-50: #18181b;
-      --gray-100: #27272a;
-      --gray-200: #3f3f46;
-      --gray-300: #52525b;
-      --gray-400: #71717a;
-      --gray-500: #a1a1aa;
-      --gray-600: #d4d4d8;
-      --gray-700: #e4e4e7;
-      --gray-800: #f4f4f5;
-      --gray-900: #fafafa;
+    /* Dark mode variables */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary: #3b82f6;
+        --primary-light: #60a5fa;
+        --primary-dark: #2563eb;
+        --secondary: #10b981;
+        --accent: #f59e0b;
+        --gray-50: #18181b;
+        --gray-100: #27272a;
+        --gray-200: #3f3f46;
+        --gray-300: #52525b;
+        --gray-400: #71717a;
+        --gray-500: #a1a1aa;
+        --gray-600: #d4d4d8;
+        --gray-700: #e4e4e7;
+        --gray-800: #f4f4f5;
+        --gray-900: #fafafa;
+      }
     }
 
-    /* Reset and base styles */
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
     }
 
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       line-height: 1.6;
-      color: var(--gray-900);
-      background: var(--gray-100);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      transition: var(--transition);
-    }
-
-    [data-theme="dark"] body {
-      color: var(--gray-200);
-      background: var(--gray-900);
-    }
-
-    /* Accessibility improvements */
-    a:focus, button:focus, input:focus, textarea:focus {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-    }
-
-    .visually-hidden {
-      border: 0;
-      clip: rect(0 0 0 0);
-      height: 1px;
-      margin: -1px;
-      overflow: hidden;
-      padding: 0;
-      position: absolute;
-      width: 1px;
-    }
-
-    /* Layout */
-    .header {
-      padding: 1.5rem 1rem;
-      background: white;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      z-index: 10;
-      transition: var(--transition);
-    }
-
-    [data-theme="dark"] .header {
-      background: var(--gray-800);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    }
-
-    .header-content {
-      width: 100%;
-      max-width: var(--content-width);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo-section {
-      text-align: left;
-    }
-
-    .header h1 {
-      font-size: 1.875rem;
-      font-weight: 700;
-      color: var(--gray-900);
-      margin-bottom: 0.25rem;
-      transition: var(--transition);
-    }
-
-    [data-theme="dark"] .header h1 {
-      color: var(--gray-50);
-    }
-
-    .header p {
-      font-size: 1rem;
-      color: var(--gray-700);
-      transition: var(--transition);
-    }
-
-    [data-theme="dark"] .header p {
-      color: var(--gray-400);
-    }
-
-    .container {
-      width: 100%;
-      max-width: var(--content-width);
-      margin: 2rem auto;
-      padding: 0 1rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 550px), 1fr));
-      gap: 2rem;
-      flex: 1;
-    }
-
-    /* Editor and Preview Panels */
-    .editor, .preview {
-      background: white;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      height: calc(100vh - 250px);
-      min-height: 450px;
-      transition: var(--transition);
-    }
-
-    [data-theme="dark"] .editor,
-    [data-theme="dark"] .preview {
-      background: var(--gray-800);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    }
-
-    .panel-header {
-      padding: 1rem;
-      background: var(--gray-100);
-      border-bottom: 1px solid var(--gray-200);
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: var(--transition);
-    }
-
-    [data-theme="dark"] .panel-header {
-      background: var(--gray-900);
-      border-bottom: 1px solid var(--gray-700);
-      color: var(--gray-200);
-    }
-
-    .editor-container {
-      flex: 1;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .editor-toolbar {
-      padding: 0.5rem;
-      border-bottom: 1px solid var(--gray-200);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.25rem;
-      background: var(--gray-50);
-      transition: var(--transition);
-    }
-
-    [data-theme="dark"] .editor-toolbar {
-      background: var(--gray-900);
-      border-bottom: 1px solid var(--gray-700);
-    }
-
-    .toolbar-btn {
-      padding: 0.35rem 0.5rem;
-      background: transparent;
-      border: 1px solid var(--gray-300);
-      border-radius: var(--radius-sm);
-      color: var(--gray-700);
-      font-size: 0.875rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .toolbar-btn:hover {
-      background: var(--gray-100);
-      color: var(--gray-900);
-    }
-
-    [data-theme="dark"] .toolbar-btn {
-      border: 1px solid var(--gray-600);
-      color: var(--gray-400);
-    }
-
-    [data-theme="dark"] .toolbar-btn:hover {
-      background: var(--gray-700);
-      color: var(--gray-200);
-    }
-
-    .toolbar-btn svg {
-      width: 1rem;
-      height: 1rem;
-      margin-right: 0.25rem;
-      vertical-align: middle;
-    }
-
-    /* Line numbers and editor styling */
-    .CodeMirror {
-      height: auto;
-      flex: 1;
-      font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-
-    .editor-wrapper {
-      flex: 1;
-      display: flex;
-      overflow: hidden;
-    }
-
-    #markdown-input {
-      flex: 1;
-      padding: 1rem;
-      border: none;
-      resize: none;
-      font-family: 'Monaco', 'Consolas', monospace;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      outline: none;
-      transition: var(--transition);
-    }
-
-    [data-theme="dark"] #markdown-input {
-      background: var(--gray-800);
-      color: var(--gray-300);
-    }
-
-    #preview-content {
-      flex: 1;
-      padding: 2rem;
-      overflow-y: auto;
-      transition: var(--transition);
-    }
-
-    [data-theme="dark"] #preview-content {
-      color: var(--gray-300);
-    }
-
-    .controls {
-      padding: 1rem;
-      background: var(--gray-100);
-      border-top: 1px solid var(--gray-200);
-      display: flex;
-      gap: 0.75rem;
-      justify-content: space-between;
-      transition: var(--transition);
-    }
-
-    [data-theme="dark"] .controls {
-      background: var(--gray-900);
-      border-top: 1px solid var(--gray-700);
-    }
-
-    .controls-left, .controls-right {
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    /* Button styling */
-    button {
-      padding: 0.5rem 1rem;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: var(--radius-sm);
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    button:hover {
-      background: var(--primary-dark);
-    }
-
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    button svg {
-      width: 1rem;
-      height: 1rem;
-    }
-
-    .btn-secondary {
-      background: var(--gray-200);
       color: var(--gray-800);
+      background-color: var(--gray-50);
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      transition: color 0.3s, background-color 0.3s;
     }
 
-    .btn-secondary:hover {
-      background: var(--gray-300);
+    @media (prefers-color-scheme: dark) {
+      body {
+        color: var(--gray-200);
+        background-color: var(--gray-900);
+      }
     }
 
-    [data-theme="dark"] .btn-secondary {
-      background: var(--gray-700);
-      color: var(--gray-200);
-    }
-
-    [data-theme="dark"] .btn-secondary:hover {
-      background: var(--gray-600);
-    }
-
-    .btn-small {
-      padding: 0.35rem 0.75rem;
-      font-size: 0.875rem;
-    }
-
-    /* Footer styling */
-    .footer {
-      text-align: center;
-      padding: 1.5rem;
-      background: white;
-      box-shadow: 0 -1px 3px rgba(0,0,0,0.1);
-      margin-top: auto;
-      transition: var(--transition);
-    }
-
-    [data-theme="dark"] .footer {
-      background: var(--gray-800);
-      box-shadow: 0 -1px 3px rgba(0,0,0,0.3);
-      color: var(--gray-400);
-    }
-
-    .footer a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* Theme toggle button */
-    .theme-toggle {
-      padding: 0.5rem;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      color: var(--gray-700);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: var(--transition);
-    }
-
-    .theme-toggle:hover {
-      background: var(--gray-100);
-    }
-
-    [data-theme="dark"] .theme-toggle {
-      color: var(--gray-300);
-    }
-
-    [data-theme="dark"] .theme-toggle:hover {
-      background: var(--gray-700);
-    }
-
-    /* Tooltip */
-    .tooltip {
-      position: relative;
-    }
-
-    .tooltip::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: -2.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 0.5rem;
-      border-radius: var(--radius-sm);
-      background: var(--gray-800);
-      color: white;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-      z-index: 100;
-    }
-
-    .tooltip:hover::after {
-      opacity: 1;
-    }
-
-    /* Modal styles */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal {
-      background: white;
-      border-radius: var(--radius);
-      max-width: 500px;
-      width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: var(--shadow-lg);
-      transform: translateY(-20px);
-      transition: transform 0.3s;
-    }
-
-    [data-theme="dark"] .modal {
-      background: var(--gray-800);
-      color: var(--gray-300);
-    }
-
-    .modal-overlay.active .modal {
-      transform: translateY(0);
-    }
-
-    .modal-header {
-      padding: 1.25rem;
-      border-bottom: 1px solid var(--gray-200);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    [data-theme="dark"] .modal-header {
-      border-bottom: 1px solid var(--gray-700);
-    }
-
-    .modal-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
-
-    .modal-close {
-      background: transparent;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--gray-600);
-      padding: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: var(--transition);
-    }
-
-    .modal-close:hover {
-      background: var(--gray-100);
-      color: var(--gray-900);
-    }
-
-    [data-theme="dark"] .modal-close:hover {
-      background: var(--gray-700);
-      color: var(--gray-300);
-    }
-
-    .modal-body {
-      padding: 1.25rem;
-    }
-
-    .modal-footer {
-      padding: 1rem 1.25rem;
-      border-top: 1px solid var(--gray-200);
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.75rem;
-    }
-
-    [data-theme="dark"] .modal-footer {
-      border-top: 1px solid var(--gray-700);
-    }
-
-    /* Form elements */
-    .form-group {
-      margin-bottom: 1rem;
-    }
-
-    .form-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-
-    .form-control {
-      display: block;
-      width: 100%;
-      padding: 0.5rem 0.75rem;
-      border: 1px solid var(--gray-300);
-      border-radius: var(--radius-sm);
-      background: white;
-      color: var(--gray-900);
-      font-size: 0.875rem;
-      transition: var(--transition);
-    }
-
-    .form-control:focus {
-      border-color: var(--primary);
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
-    }
-
-    [data-theme="dark"] .form-control {
-      border-color: var(--gray-600);
-      background: var(--gray-700);
-      color: var(--gray-200);
-    }
-
-    [data-theme="dark"] .form-control:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-    }
-
-    select.form-control {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.75rem center;
-      background-size: 1rem;
-      padding-right: 2.5rem;
-    }
-
-    /* Toast notifications */
-    .toast-container {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      z-index: 1000;
-    }
-
-    .toast {
-      padding: 1rem;
-      margin-top: 0.75rem;
-      border-radius: var(--radius);
-      background: white;
-      box-shadow: var(--shadow-md);
-      display: flex;
-      align-items: center;
-      max-width: 300px;
-      transform: translateX(120%);
-      animation: slideIn 0.3s forwards, slideOut 0.3s 4s forwards;
-    }
-
-    [data-theme="dark"] .toast {
-      background: var(--gray-800);
-    }
-
-    @keyframes slideIn {
-      to { transform: translateX(0); }
-    }
-
-    @keyframes slideOut {
-      to { transform: translateX(120%); }
-    }
-
-    .toast-icon {
-      margin-right: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .toast-message {
-      font-size: 0.875rem;
-      color: var(--gray-800);
-    }
-
-    [data-theme="dark"] .toast-message {
-      color: var(--gray-300);
-    }
-
-    .toast-success .toast-icon {
-      color: var(--success);
-    }
-
-    .toast-error .toast-icon {
-      color: var(--error);
-    }
-
-    .toast-warning .toast-icon {
-      color: var(--warning);
-    }
-
-    /* Loading spinner */
-    .spinner {
-      width: 1rem;
-      height: 1rem;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Keyboard shortcuts tooltip */
-    kbd {
-      background-color: var(--gray-100);
-      border: 1px solid var(--gray-300);
-      border-radius: 3px;
-      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-      color: var(--gray-900);
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      line-height: 1;
-      padding: 0.25rem 0.5rem;
-      vertical-align: middle;
-      margin: 0 0.25rem;
-    }
-
-    [data-theme="dark"] kbd {
-      background-color: var(--gray-700);
-      border-color: var(--gray-600);
-      color: var(--gray-300);
-    }
-
-    /* Responsiveness improvements */
     @media (max-width: 768px) {
-      .container {
-        grid-template-columns: 1fr;
-      }
-
-      .header-content {
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .hidden-mobile {
-        display: none;
-      }
-
-      .header h1 {
-        font-size: 1.5rem;
-      }
-
-      .editor, .preview {
-        height: 500px;
+      body {
+        padding: 1.5rem 1rem;
       }
     }
 
-    /* Drop zone styling */
-    .drop-zone {
-      border: 2px dashed var(--gray-300);
-      border-radius: var(--radius);
-      padding: 2rem;
-      text-align: center;
-      color: var(--gray-600);
-      margin-bottom: 1rem;
-      transition: var(--transition);
-    }
-
-    .drop-zone.active {
-      border-color: var(--primary);
-      background: rgba(37, 99, 235, 0.05);
-    }
-
-    [data-theme="dark"] .drop-zone {
-      border-color: var(--gray-600);
-      color: var(--gray-400);
-    }
-
-    [data-theme="dark"] .drop-zone.active {
-      border-color: var(--primary);
-      background: rgba(59, 130, 246, 0.1);
-    }
-
-    /* File input */
-    .file-input {
-      display: none;
-    }
-
-    /* Preview content styling */
-    #preview-content {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      color: var(--gray-900);
-      line-height: 1.6;
-    }
-
-    [data-theme="dark"] #preview-content {
-      color: var(--gray-300);
-    }
-
-    #preview-content h1, 
-    #preview-content h2, 
-    #preview-content h3,
-    #preview-content h4,
-    #preview-content h5,
-    #preview-content h6 {
-      margin-top: 1.5em;
-      margin-bottom: 0.5em;
-      line-height: 1.3;
-      color: var(--gray-900);
-    }
-
-    [data-theme="dark"] #preview-content h1, 
-    [data-theme="dark"] #preview-content h2, 
-    [data-theme="dark"] #preview-content h3,
-    [data-theme="dark"] #preview-content h4,
-    [data-theme="dark"] #preview-content h5,
-    [data-theme="dark"] #preview-content h6 {
-      color: var(--gray-100);
-    }
-
-    #preview-content h1:first-child {
-      margin-top: 0;
-    }
-
-    #preview-content p {
-      margin-bottom: 1em;
-      page-break-inside: avoid;
-    }
-
-    #preview-content a {
+    a {
       color: var(--primary);
       text-decoration: none;
+      transition: color 0.2s;
     }
 
-    #preview-content a:hover {
+    a:hover {
+      color: var(--primary-dark);
       text-decoration: underline;
     }
 
-    #preview-content table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1em 0;
-      page-break-inside: avoid;
+    @media (prefers-color-scheme: dark) {
+      a:hover {
+        color: var(--primary-light);
+      }
     }
 
-    #preview-content th,
-    #preview-content td {
-      padding: 0.5rem;
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--gray-900);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      h1, h2, h3, h4, h5, h6 {
+        color: var(--gray-100);
+      }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-top: 0;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      h2 {
+        border-bottom-color: var(--gray-700);
+      }
+    }
+
+    h3 {
+      font-size: 1.375rem;
+    }
+
+    h4 {
+      font-size: 1.25rem;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+    }
+
+    blockquote {
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      background-color: var(--gray-100);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius-sm);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      blockquote {
+        background-color: var(--gray-800);
+      }
+    }
+
+    blockquote p {
+      margin-bottom: 0;
+    }
+
+    ul, ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.75rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    hr {
+      height: 1px;
+      background-color: var(--gray-200);
+      border: none;
+      margin: 2.5rem 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      hr {
+        background-color: var(--gray-700);
+      }
+    }
+
+    /* Code blocks */
+    pre {
+      background-color: var(--gray-100);
+      border-radius: var(--radius);
+      padding: 1rem;
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
       border: 1px solid var(--gray-200);
     }
 
-    [data-theme="dark"] #preview-content th,
-    [data-theme="dark"] #preview-content td {
-      border-color: var(--gray-700);
+    @media (prefers-color-scheme: dark) {
+      pre {
+        background-color: var(--gray-800);
+        border-color: var(--gray-700);
+      }
     }
 
-    #preview-content th {
-      background: var(--gray-100);
-      font-weight: 600;
-    }
-
-    [data-theme="dark"] #preview-content th {
-      background: var(--gray-800);
-    }
-
-    #preview-content code {
-      background: var(--gray-100);
-      padding: 0.2em 0.4em;
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 0.2rem 0.4rem;
+      background-color: var(--gray-100);
       border-radius: var(--radius-sm);
-      font-family: 'Monaco', 'Consolas', monospace;
-      font-size: 0.9em;
     }
 
-    [data-theme="dark"] #preview-content code {
-      background: var(--gray-800);
+    @media (prefers-color-scheme: dark) {
+      code {
+        background-color: var(--gray-800);
+      }
     }
 
-    #preview-content pre {
-      background: var(--gray-100);
-      padding: 1rem;
-      border-radius: var(--radius-sm);
-      overflow-x: auto;
-      margin: 1em 0;
-      page-break-inside: avoid;
-    }
-
-    [data-theme="dark"] #preview-content pre {
-      background: var(--gray-800);
-    }
-
-    #preview-content pre code {
-      background: none;
+    pre code {
+      background-color: transparent;
       padding: 0;
+      border-radius: 0;
     }
 
-    #preview-content blockquote {
-      border-left: 4px solid var(--primary);
-      padding-left: 1rem;
-      margin: 1em 0;
-      color: var(--gray-700);
-      page-break-inside: avoid;
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5rem;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
     }
 
-    [data-theme="dark"] #preview-content blockquote {
-      color: var(--gray-400);
+    th {
+      background-color: var(--gray-200);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--gray-800);
+      white-space: nowrap;
     }
 
-    #preview-content img {
-      max-width: 100%;
-      height: auto;
+    @media (prefers-color-scheme: dark) {
+      th {
+        background-color: var(--gray-700);
+        color: var(--gray-100);
+      }
     }
 
-    #preview-content ul,
-    #preview-content ol {
-      margin: 1em 0;
-      padding-left: 2em;
-      page-break-inside: avoid;
-    }
-
-    #preview-content hr {
-      border: none;
+    td {
+      padding: 0.75rem 1rem;
       border-top: 1px solid var(--gray-200);
-      margin: 2em 0;
+      vertical-align: top;
     }
 
-    [data-theme="dark"] #preview-content hr {
-      border-top: 1px solid var(--gray-700);
+    @media (prefers-color-scheme: dark) {
+      td {
+        border-top-color: var(--gray-700);
+      }
+    }
+
+    tr:nth-child(even) {
+      background-color: var(--gray-50);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      tr:nth-child(even) {
+        background-color: var(--gray-800);
+      }
+    }
+
+    tr:hover {
+      background-color: var(--gray-100);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      tr:hover {
+        background-color: var(--gray-800);
+      }
+    }
+
+    /* Responsive tables */
+    @media (max-width: 768px) {
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+    }
+
+    /* Images and badges */
+    .header-image {
+      display: block;
+      max-width: 250px;
+      margin: 0 auto 2rem;
+    }
+
+    .badges {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .badge-blue {
+      background-color: var(--blue);
+      color: white;
+    }
+
+    .badge-green {
+      background-color: var(--green);
+      color: white;
+    }
+
+    .badge-yellow {
+      background-color: var(--yellow);
+      color: white;
+    }
+
+    /* Center content */
+    .center {
+      text-align: center;
+    }
+
+    /* Mermaid diagrams */
+    .mermaid {
+      margin-bottom: 1.5rem;
+      background-color: var(--gray-100);
+      border-radius: var(--radius);
+      padding: 1rem;
+      overflow-x: auto;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .mermaid {
+        background-color: var(--gray-800);
+      }
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: var(--gray-600);
+      font-size: 0.9rem;
+    }
+
+    /* Feature comparison table */
+    .feature-table td:not(:first-child) {
+      text-align: center;
+    }
+
+    /* Browser compatibility */
+    .browser-list {
+      list-style: none;
+      padding-left: 0.5rem;
+    }
+
+    .browser-item {
+      margin-bottom: 0.5rem;
+    }
+
+    .browser-supported {
+      color: var(--green);
+    }
+
+    .browser-partial {
+      color: var(--yellow);
+    }
+
+    .browser-unsupported {
+      color: var(--red);
+    }
+
+    /* Keyboard shortcuts */
+    kbd {
+      display: inline-block;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      line-height: 1.4;
+      color: var(--gray-800);
+      background-color: var(--gray-100);
+      border: 1px solid var(--gray-300);
+      border-radius: 3px;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+      white-space: nowrap;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      kbd {
+        color: var(--gray-200);
+        background-color: var(--gray-800);
+        border-color: var(--gray-700);
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
     }
 
     /* Print styles */
     @media print {
-      @page {
-        margin: 15mm;
-      }
-
-      body, html {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        background: white;
-      }
-
-      .header, .footer, .controls, .panel-header, .editor {
-        display: none;
-      }
-
-      .container {
-        display: block;
-        padding: 0;
-        margin: 0;
+      body {
+        font-size: 12pt;
         max-width: none;
-      }
-
-      .preview {
-        height: auto;
-        box-shadow: none;
-        border-radius: 0;
-        background: white;
-      }
-
-      #preview-content {
-        padding: 0;
-        font-size: 11pt;
+        padding: 1cm;
         color: black;
+        background-color: white;
       }
-
-      #preview-content h1:not(:first-of-type),
-      #preview-content h2:not(:first-of-type) {
-        page-break-before: always;
+      
+      a {
+        color: blue;
+        text-decoration: underline;
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        color: black;
+        break-after: avoid;
+      }
+      
+      h2 {
         break-before: page;
+      }
+      
+      table, figure {
+        break-inside: avoid;
+      }
+      
+      pre, blockquote {
+        border: 1px solid #ddd;
+        break-inside: avoid;
+      }
+      
+      .badges, .header-image {
+        display: none;
       }
     }
   </style>
 </head>
 <body>
-  <header class="header">
-    <div class="header-content">
-      <div class="logo-section">
-        <h1>Markdown to PDF Converter 🚀</h1>
-        <p>Transform your AI conversations into beautiful PDFs in seconds</p>
-      </div>
-      <div class="actions">
-        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
-          <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-          <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-  </header>
+  <h1>Markdown to PDF Converter 🚀</h1>
 
-  <div class="container">
-    <div class="editor">
-      <div class="panel-header">
-        <span>Markdown Editor</span>
-        <div>
-          <button id="keyboard-shortcuts" class="btn-small btn-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-            </svg>
-            Shortcuts
-          </button>
-        </div>
-      </div>
-      <div class="editor-toolbar">
-        <button class="toolbar-btn" data-action="heading" data-tooltip="Heading (Ctrl+H)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 12h12"></path>
-            <path d="M6 20V4"></path>
-            <path d="M18 20V4"></path>
-          </svg>
-          H
-        </button>
-        <button class="toolbar-btn" data-action="bold" data-tooltip="Bold (Ctrl+B)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
-            <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
-          </svg>
-        </button>
-        <button class="toolbar-btn" data-action="italic" data-tooltip="Italic (Ctrl+I)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="4" x2="10" y2="4"></line>
-            <line x1="14" y1="20" x2="5" y2="20"></line>
-            <line x1="15" y1="4" x2="9" y2="20"></line>
-          </svg>
-        </button>
-        <button class="toolbar-btn" data-action="link" data-tooltip="Link (Ctrl+K)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-          </svg>
-        </button>
-        <button class="toolbar-btn" data-action="ul" data-tooltip="Unordered List (Ctrl+U)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="8" y1="6" x2="21" y2="6"></line>
-            <line x1="8" y1="12" x2="21" y2="12"></line>
-            <line x1="8" y1="18" x2="21" y2="18"></line>
-            <line x1="3" y1="6" x2="3.01" y2="6"></line>
-            <line x1="3" y1="12" x2="3.01" y2="12"></line>
-            <line x1="3" y1="18" x2="3.01" y2="18"></line>
-          </svg>
-        </button>
-        <button class="toolbar-btn" data-action="ol" data-tooltip="Ordered List (Ctrl+O)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="10" y1="6" x2="21" y2="6"></line>
-            <line x1="10" y1="12" x2="21" y2="12"></line>
-            <line x1="10" y1="18" x2="21" y2="18"></line>
-            <path d="M4 6h1v4"></path>
-            <path d="M4 10h2"></path>
-            <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path>
-          </svg>
-        </button>
-        <button class="toolbar-btn" data-action="code" data-tooltip="Code Block (Ctrl+Shift+C)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="16 18 22 12 16 6"></polyline>
-            <polyline points="8 6 2 12 8 18"></polyline>
-          </svg>
-        </button>
-        <button class="toolbar-btn" data-action="quote" data-tooltip="Quote (Ctrl+Q)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"></path>
-            <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"></path>
-          </svg>
-        </button>
-        <button class="toolbar-btn" data-action="table" data-tooltip="Table">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="3" y1="9" x2="21" y2="9"></line>
-            <line x1="3" y1="15" x2="21" y2="15"></line>
-            <line x1="9" y1="3" x2="9" y2="21"></line>
-            <line x1="15" y1="3" x2="15" y2="21"></line>
-          </svg>
-        </button>
-        <button class="toolbar-btn" data-action="mermaid" data-tooltip="Mermaid Diagram">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 16v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4M4 8v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M3 4h18a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"></path>
-          </svg>
-        </button>
-      </div>
-      <textarea id="markdown-input" placeholder="Write or paste your Markdown here..."></textarea>
-      <div class="controls">
-        <div class="controls-left">
-          <button id="upload-btn" class="btn-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="17 8 12 3 7 8"></polyline>
-              <line x1="12" y1="3" x2="12" y2="15"></line>
-            </svg>
-            Import
-          </button>
-          <input type="file" id="file-input" class="file-input" accept=".md,.txt,.markdown">
-          <button id="save-markdown-btn" class="btn-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-              <polyline points="17 21 17 13 7 13 7 21"></polyline>
-              <polyline points="7 3 7 8 15 8"></polyline>
-            </svg>
-            Save
-          </button>
-        </div>
-        <div class="controls-right">
-          <button id="clear-btn" class="btn-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3 6 5 6 21 6"></polyline>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-            </svg>
-            Clear
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="preview">
-      <div class="panel-header">
-        <span>Preview</span>
-        <div>
-          <button id="print-btn" class="btn-small btn-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 6 2 18 2 18 9"></polyline>
-              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-              <rect x="6" y="14" width="12" height="8"></rect>
-            </svg>
-            Print
-          </button>
-        </div>
-      </div>
-      <div id="preview-content"></div>
-      <div class="controls">
-        <div class="controls-left">
-          <button id="settings-btn" class="btn-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-            Settings
-          </button>
-        </div>
-        <div class="controls-right">
-          <button id="generate-pdf-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10 9 9 9 8 9"></polyline>
-            </svg>
-            Generate PDF
-          </button>
-        </div>
-      </div>
-    </div>
+  <div class="badges">
+    <a href="https://opensource.org/licenses/MIT" class="badge badge-blue">
+      License: MIT
+    </a>
+    <a href="https://github.com/BrosG/markdown-to-pdf" class="badge badge-green">
+      Version: 2.0.0
+    </a>
+    <a href="https://mark2pdf.com" class="badge badge-yellow">
+      Live Demo
+    </a>
   </div>
 
-  <footer class="footer">
-    <p>Created with ❤️ by <a href="https://github.com/BrosG" target="_blank" rel="noopener noreferrer">Gauthier Bros</a></p>
-  </footer>
+  <blockquote>
+    <p>Transform your Markdown and AI conversations into beautifully formatted PDFs in seconds!</p>
+  </blockquote>
 
-  <!-- Modals -->
-  <div id="keyboard-shortcuts-modal" class="modal-overlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title">Keyboard Shortcuts</h2>
-        <button class="modal-close" aria-label="Close modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>Use these keyboard shortcuts to speed up your workflow:</p>
-        <ul style="list-style-type: none; padding: 0; margin: 1rem 0;">
-          <li style="margin-bottom: 0.5rem;"><kbd>Ctrl</kbd> + <kbd>B</kbd> - Bold</li>
-          <li style="margin-bottom: 0.5rem;"><kbd>Ctrl</kbd> + <kbd>I</kbd> - Italic</li>
-          <li style="margin-bottom: 0.5rem;"><kbd>Ctrl</kbd> + <kbd>K</kbd> - Insert Link</li>
-          <li style="margin-bottom: 0.5rem;"><kbd>Ctrl</kbd> + <kbd>H</kbd> - Toggle Heading</li>
-          <li style="margin-bottom: 0.5rem;"><kbd>Ctrl</kbd> + <kbd>U</kbd> - Unordered List</li>
-          <li style="margin-bottom: 0.5rem;"><kbd>Ctrl</kbd> + <kbd>O</kbd> - Ordered List</li>
-          <li style="margin-bottom: 0.5rem;"><kbd>Ctrl</kbd> + <kbd>Q</kbd> - Quote</li>
-          <li style="margin-bottom: 0.5rem;"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> - Code Block</li>
-          <li style="margin-bottom: 0.5rem;"><kbd>Ctrl</kbd> + <kbd>S</kbd> - Save Markdown</li>
-          <li style="margin-bottom: 0.5rem;"><kbd>Ctrl</kbd> + <kbd>P</kbd> - Generate PDF</li>
-          <li style="margin-bottom: 0.5rem;"><kbd>Ctrl</kbd> + <kbd>Z</kbd> - Undo</li>
-          <li style="margin-bottom: 0.5rem;"><kbd>Ctrl</kbd> + <kbd>Y</kbd> - Redo</li>
-        </ul>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-secondary modal-close">Close</button>
-      </div>
-    </div>
-  </div>
+  <p class="center">
+    <img src="https://mark2pdf.com/images/logo.png" alt="Markdown to PDF Converter Logo" width="250" class="header-image">
+  </p>
 
-  <div id="settings-modal" class="modal-overlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title">PDF Settings</h2>
-        <button class="modal-close" aria-label="Close modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="pdf-filename" class="form-label">Filename</label>
-          <input type="text" id="pdf-filename" class="form-control" value="document.pdf">
-        </div>
-        <div class="form-group">
-          <label for="pdf-format" class="form-label">Page Size</label>
-          <select id="pdf-format" class="form-control">
-            <option value="a4">A4</option>
-            <option value="letter">Letter</option>
-            <option value="legal">Legal</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="pdf-orientation" class="form-label">Orientation</label>
-          <select id="pdf-orientation" class="form-control">
-            <option value="portrait">Portrait</option>
-            <option value="landscape">Landscape</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="pdf-margin" class="form-label">Margins (mm)</label>
-          <input type="number" id="pdf-margin" class="form-control" value="20" min="0" max="100">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-secondary modal-close">Cancel</button>
-        <button id="save-settings" class="btn-primary">Save Settings</button>
-      </div>
-    </div>
-  </div>
+  <h2>📋 Overview</h2>
 
-  <!-- Toast container -->
-  <div class="toast-container" id="toast-container"></div>
+  <p><strong>Markdown to PDF Converter</strong> is a powerful browser-based tool that converts Markdown content into professionally styled PDF documents. Perfect for turning notes, documentation, AI conversations, and reports into shareable documents without the hassle of complex desktop software.</p>
 
-  <!-- External Libraries with version and integrity -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js" integrity="sha512-5QwWx+U/lHphkjxlI5tFfR0VX7yxj+oYfk+7DJD8kHqQPSxk9n1tTUzmfDo9j/FD0aAIwZfKIbZ3QXC5vSRjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js" integrity="sha256-b2gYu+cYhGVi0UhXCJPqyQeFQTGK+UcLIJR/X9GQVtU=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/core.min.js" integrity="sha256-6AQqiO+GVV4CfmUd3jZGsRz7VVfNCV90VFszQGmDiOE=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/languages/javascript.min.js" integrity="sha256-7lHKKPG9BNrSuwK8MgWd4KnMniBjIYZUGSNnb0GYnrI=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/languages/typescript.min.js" integrity="sha256-oUmqS1XNYQLR6M/LDzCjrENAMf5F5pBl45M0KbdxsGM=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/languages/markdown.min.js" integrity="sha256-0QJXNo1BVGJCYdyiSLJPMdM8wXsRpK6e7c7HUWOvMTc=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/languages/python.min.js" integrity="sha256-2g2Dk7/QyZsERR7+ahB3jZHkpQHvBLfvDBv8tYoGNrA=" crossorigin="anonymous"></script>
+  <h2>✨ Features</h2>
 
-  <script>
-    // App State Management
-    const appState = {
-      markdownContent: '',
-      pdfSettings: {
-        filename: 'document.pdf',
-        format: 'a4',
-        orientation: 'portrait',
-        margin: 20
-      },
-      darkMode: false,
-      lastSaved: null,
-      undoStack: [],
-      redoStack: [],
-      currentHistoryIndex: -1,
-      maxHistorySize: 50
-    };
+  <ul>
+    <li>🔄 <strong>Real-time Preview</strong>: See your changes instantly as you type</li>
+    <li>🌓 <strong>Dark Mode Support</strong>: Work comfortably day or night</li>
+    <li>📱 <strong>Responsive Design</strong>: Works on desktop, tablet, and mobile</li>
+    <li>💾 <strong>Auto-Save</strong>: Never lose your work with automatic localStorage backup</li>
+    <li>🔄 <strong>Undo/Redo</strong>: Full history management with keyboard shortcuts</li>
+    <li>📝 <strong>Rich Markdown Support</strong>: Tables, code blocks, diagrams, and more</li>
+    <li>📊 <strong>Mermaid Diagrams</strong>: Create flowcharts, sequence diagrams, and more</li>
+    <li>🛠️ <strong>Customization Options</strong>: Page size, orientation, and margins</li>
+    <li>🔒 <strong>Privacy-Focused</strong>: All processing happens in your browser - nothing is sent to a server</li>
+    <li>📁 <strong>Import/Export</strong>: Drag-and-drop file import and one-click export</li>
+    <li>🖨️ <strong>Print Mode</strong>: Optimized printing with proper page breaks</li>
+  </ul>
 
-    // Utility Functions
-    const debounce = (func, wait) => {
-      let timeout;
-      return function executedFunction(...args) {
-        const later = () => {
-          clearTimeout(timeout);
-          func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-      };
-    };
+  <h2>🛠️ Installation & Setup</h2>
 
-    const showToast = (message, type = 'success') => {
-      const toastContainer = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `toast toast-${type}`;
-      
-      let iconSvg = '';
-      if (type === 'success') {
-        iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
-      } else if (type === 'error') {
-        iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
-      } else if (type === 'warning') {
-        iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
-      }
-      
-      toast.innerHTML = `
-        <div class="toast-icon">${iconSvg}</div>
-        <div class="toast-message">${message}</div>
-      `;
-      
-      toastContainer.appendChild(toast);
-      
-      // Automatically remove the toast after animation
-      setTimeout(() => {
-        toast.remove();
-      }, 5000);
-    };
+  <h3>Option 1: Direct Usage</h3>
 
-    const saveToLocalStorage = () => {
-      try {
-        localStorage.setItem('markdownContent', appState.markdownContent);
-        localStorage.setItem('pdfSettings', JSON.stringify(appState.pdfSettings));
-        localStorage.setItem('darkMode', appState.darkMode);
-        appState.lastSaved = new Date();
-      } catch (error) {
-        console.error('Error saving to localStorage:', error);
-      }
-    };
+  <p>Simply visit <a href="https://mark2pdf.com">mark2pdf.com</a> to use the tool immediately - no installation required!</p>
 
-    const loadFromLocalStorage = () => {
-      try {
-        const savedContent = localStorage.getItem('markdownContent');
-        const savedSettings = localStorage.getItem('pdfSettings');
-        const savedDarkMode = localStorage.getItem('darkMode');
-        
-        if (savedContent) {
-          appState.markdownContent = savedContent;
-          document.getElementById('markdown-input').value = savedContent;
-        }
-        
-        if (savedSettings) {
-          appState.pdfSettings = JSON.parse(savedSettings);
-          // Update settings form fields
-          document.getElementById('pdf-filename').value = appState.pdfSettings.filename;
-          document.getElementById('pdf-format').value = appState.pdfSettings.format;
-          document.getElementById('pdf-orientation').value = appState.pdfSettings.orientation;
-          document.getElementById('pdf-margin').value = appState.pdfSettings.margin;
-        }
-        
-        if (savedDarkMode) {
-          appState.darkMode = savedDarkMode === 'true';
-          updateTheme();
-        }
-      } catch (error) {
-        console.error('Error loading from localStorage:', error);
-      }
-    };
+  <h3>Option 2: Self-Hosting</h3>
 
-    // History management for undo/redo
-    const recordHistory = (content) => {
-      // If we're not at the end of the history, truncate
-      if (appState.currentHistoryIndex < appState.undoStack.length - 1) {
-        appState.undoStack = appState.undoStack.slice(0, appState.currentHistoryIndex + 1);
-        appState.redoStack = [];
-      }
-      
-      // Add the new state to the history
-      appState.undoStack.push(content);
-      
-      // Limit history size
-      if (appState.undoStack.length > appState.maxHistorySize) {
-        appState.undoStack.shift();
-      }
-      
-      appState.currentHistoryIndex = appState.undoStack.length - 1;
-    };
+  <ol>
+    <li>
+      <p>Clone the repository:</p>
+      <pre><code>git clone https://github.com/BrosG/markdown-to-pdf.git</code></pre>
+    </li>
+    <li>
+      <p>Open the <code>index.html</code> file in your browser or serve it with a simple HTTP server:</p>
+      <pre><code># Using Python
+python -m http.server
 
-    const undo = () => {
-      if (appState.currentHistoryIndex > 0) {
-        appState.redoStack.push(appState.undoStack[appState.currentHistoryIndex]);
-        appState.currentHistoryIndex--;
-        const previousContent = appState.undoStack[appState.currentHistoryIndex];
-        document.getElementById('markdown-input').value = previousContent;
-        appState.markdownContent = previousContent;
-        updatePreview();
-      }
-    };
+# Using Node.js
+npx serve</code></pre>
+    </li>
+    <li>
+      <p>Access the application at <code>http://localhost:8000</code> (or the port provided by your server)</p>
+    </li>
+  </ol>
 
-    const redo = () => {
-      if (appState.redoStack.length > 0) {
-        appState.currentHistoryIndex++;
-        const nextContent = appState.redoStack.pop();
-        document.getElementById('markdown-input').value = nextContent;
-        appState.markdownContent = nextContent;
-        updatePreview();
-      }
-    };
+  <h2>📖 Usage Guide</h2>
 
-    // Toggle dark mode
-    const updateTheme = () => {
-      document.documentElement.setAttribute('data-theme', appState.darkMode ? 'dark' : 'light');
-      
-      // Update theme toggle icons
-      document.getElementById('sun-icon').style.display = appState.darkMode ? 'inline' : 'none';
-      document.getElementById('moon-icon').style.display = appState.darkMode ? 'none' : 'inline';
-    };
+  <h3>Basic Usage</h3>
 
-    // Initialize Mermaid
-    mermaid.initialize({ 
-      startOnLoad: false, 
-      theme: 'default',
-      securityLevel: 'strict',
-      fontFamily: 'Inter, sans-serif'
-    });
+  <ol>
+    <li>Type or paste your Markdown in the editor panel (left side)</li>
+    <li>View the rendered output in the preview panel (right side)</li>
+    <li>Click "Generate PDF" to download your document as a PDF</li>
+  </ol>
 
-    // Custom renderer for marked
-    const renderer = new marked.Renderer();
-    renderer.code = function(code, language) {
-      if (language) {
-        const lang = language.toLowerCase();
-        if (lang === 'mermaid') {
-          return `<div class="mermaid">${code}</div>`;
-        }
-        if (lang === 'schema') {
-          return `<div class="mermaid schema-diagram">${code}</div>`;
-        }
-      }
-      return `<pre><code class="${language ? 'language-' + language : ''}">${code}</code></pre>`;
-    };
+  <h3>Keyboard Shortcuts</h3>
 
-    marked.setOptions({
-      renderer: renderer,
-      breaks: true,
-      gfm: true,
-      headerIds: true,
-      mangle: false,
-      pedantic: false,
-      sanitize: false,
-      smartLists: true,
-      smartypants: true,
-      xhtml: true,
-      highlight: function(code, lang) {
-        if (window.hljs && lang && hljs.getLanguage(lang)) {
-          try {
-            return hljs.highlight(code, {language: lang}).value;
-          } catch (e) {
-            console.error(e);
-          }
-        }
-        return code;
-      }
-    });
+  <table>
+    <thead>
+      <tr>
+        <th>Shortcut</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><kbd>Ctrl</kbd>+<kbd>B</kbd></td>
+        <td>Bold text</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl</kbd>+<kbd>I</kbd></td>
+        <td>Italic text</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl</kbd>+<kbd>K</kbd></td>
+        <td>Insert link</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl</kbd>+<kbd>H</kbd></td>
+        <td>Insert heading</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl</kbd>+<kbd>U</kbd></td>
+        <td>Unordered list</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl</kbd>+<kbd>O</kbd></td>
+        <td>Ordered list</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl</kbd>+<kbd>Q</kbd></td>
+        <td>Blockquote</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd></td>
+        <td>Code block</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl</kbd>+<kbd>S</kbd></td>
+        <td>Save Markdown file</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl</kbd>+<kbd>P</kbd></td>
+        <td>Generate PDF</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td>
+        <td>Undo</td>
+      </tr>
+      <tr>
+        <td><kbd>Ctrl</kbd>+<kbd>Y</kbd></td>
+        <td>Redo</td>
+      </tr>
+    </tbody>
+  </table>
 
-    // Helper function to wait
-    function wait(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
+  <h2>📊 Diagram Support</h2>
 
-    // Update preview panel and render Mermaid diagrams
-    function updatePreview() {
-      const markdownInput = document.getElementById('markdown-input');
-      const previewContent = document.getElementById('preview-content');
-      const markdown = markdownInput.value;
-      
-      appState.markdownContent = markdown;
-      
-      try {
-        previewContent.innerHTML = marked.parse(markdown);
-        
-        // Render Mermaid diagrams
-        try {
-          mermaid.init(undefined, previewContent.querySelectorAll('.mermaid'));
-        } catch (e) {
-          console.error('Error rendering Mermaid diagrams:', e);
-        }
-        
-        // Apply syntax highlighting
-        if (window.hljs) {
-          document.querySelectorAll('pre code').forEach(block => {
-            try {
-              hljs.highlightElement(block);
-            } catch (e) {
-              console.error('Error applying syntax highlighting:', e);
-            }
-          });
-        }
-        
-        // Auto-save to localStorage
-        saveToLocalStorage();
-        
-      } catch (error) {
-        console.error('Error updating preview:', error);
-        showToast('Error rendering markdown. Check for syntax errors.', 'error');
-      }
-    }
+  <h3>Flow Charts</h3>
 
-    // Generate PDF with current settings
-    async function generatePDF() {
-      const previewContent = document.getElementById('preview-content');
-      const button = document.getElementById('generate-pdf-btn');
-      
-      try {
-        // Change button state
-        button.disabled = true;
-        const originalText = button.innerHTML;
-        button.innerHTML = `<div class="spinner"></div> Generating...`;
-        
-        // Apply current PDF settings
-        const pdfOptions = {
-          margin: [appState.pdfSettings.margin, appState.pdfSettings.margin],
-          filename: appState.pdfSettings.filename,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { 
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            allowTaint: true
-          },
-          jsPDF: { 
-            unit: 'mm', 
-            format: appState.pdfSettings.format, 
-            orientation: appState.pdfSettings.orientation
-          },
-          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-        };
-        
-        // Wait for diagrams to render completely
-        await wait(1000);
-        
-        // Generate PDF
-        await html2pdf().set(pdfOptions).from(previewContent).save();
-        
-        // Reset button
-        button.innerHTML = originalText;
-        button.disabled = false;
-        
-        // Show success message
-        showToast('PDF generated successfully!', 'success');
-        
-      } catch (error) {
-        console.error('Error generating PDF:', error);
-        button.innerHTML = originalText;
-        button.disabled = false;
-        showToast('Error generating PDF. Please try again.', 'error');
-      }
-    }
-
-    // Clear editor and reset history
-    function clearEditor() {
-      if (document.getElementById('markdown-input').value.trim() !== '') {
-        if (confirm('Are you sure you want to clear the editor? All content will be lost.')) {
-          document.getElementById('markdown-input').value = '';
-          appState.markdownContent = '';
-          appState.undoStack = [''];
-          appState.redoStack = [];
-          appState.currentHistoryIndex = 0;
-          updatePreview();
-          showToast('Editor cleared', 'success');
-        }
-      } else {
-        showToast('Editor is already empty', 'info');
-      }
-    }
-
-    // Save markdown to file
-    function saveMarkdownToFile() {
-      const content = document.getElementById('markdown-input').value;
-      const filename = appState.pdfSettings.filename.replace('.pdf', '.md');
-      const blob = new Blob([content], { type: 'text/markdown' });
-      const url = URL.createObjectURL(blob);
-      
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      showToast('Markdown file saved', 'success');
-    }
-
-    // Import markdown from file
-    function importMarkdownFile(file) {
-      const reader = new FileReader();
-      
-      reader.onload = function(e) {
-        const content = e.target.result;
-        document.getElementById('markdown-input').value = content;
-        appState.markdownContent = content;
-        recordHistory(content);
-        updatePreview();
-        showToast('File imported successfully', 'success');
-      };
-      
-      reader.onerror = function() {
-        showToast('Error reading file', 'error');
-      };
-      
-      reader.readAsText(file);
-    }
-
-    // Print preview
-    function printPreview() {
-      window.print();
-    }
-
-    // Handle toolbar button clicks
-    function handleToolbarAction(action) {
-      const textarea = document.getElementById('markdown-input');
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = textarea.value.substring(start, end);
-      let replacement = '';
-      
-      switch(action) {
-        case 'bold':
-          replacement = `**${selectedText || 'bold text'}**`;
-          break;
-        case 'italic':
-          replacement = `*${selectedText || 'italic text'}*`;
-          break;
-        case 'heading':
-          replacement = `\n## ${selectedText || 'Heading'}\n`;
-          break;
-        case 'link':
-          replacement = `[${selectedText || 'link text'}](https://example.com)`;
-          break;
-        case 'ul':
-          replacement = selectedText ? selectedText.split('\n').map(line => `- ${line}`).join('\n') : '- List item';
-          break;
-        case 'ol':
-          replacement = selectedText ? selectedText.split('\n').map((line, i) => `${i+1}. ${line}`).join('\n') : '1. List item';
-          break;
-        case 'code':
-          replacement = `\`\`\`\n${selectedText || 'code'}\n\`\`\``;
-          break;
-        case 'quote':
-          replacement = selectedText ? selectedText.split('\n').map(line => `> ${line}`).join('\n') : '> Blockquote';
-          break;
-        case 'table':
-          replacement = `| Header 1 | Header 2 | Header 3 |\n| -------- | -------- | -------- |\n| Cell 1   | Cell 2   | Cell 3   |\n| Cell 4   | Cell 5   | Cell 6   |`;
-          break;
-        case 'mermaid':
-          replacement = `\`\`\`mermaid\ngraph TD\n    A[Start] --> B{Decision}\n    B -->|Yes| C[Do Something]\n    B -->|No| D[Do Something Else]\n    C --> E[End]\n    D --> E\n\`\`\``;
-          break;
-      }
-      
-      // Insert the replacement text
-      textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
-      
-      // Update the cursor position
-      const newCursorPos = start + replacement.length;
-      textarea.selectionStart = newCursorPos;
-      textarea.selectionEnd = newCursorPos;
-      
-      // Focus the textarea
-      textarea.focus();
-      
-      // Update preview
-      appState.markdownContent = textarea.value;
-      recordHistory(textarea.value);
-      updatePreview();
-    }
-
-    // Handle file drag and drop
-    function handleFileDrop(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      if (e.dataTransfer.items) {
-        // Use DataTransferItemList interface
-        for (let i = 0; i < e.dataTransfer.items.length; i++) {
-          if (e.dataTransfer.items[i].kind === 'file') {
-            const file = e.dataTransfer.items[i].getAsFile();
-            if (file.type === 'text/markdown' || file.name.endsWith('.md') || file.name.endsWith('.markdown') || file.type === 'text/plain') {
-              importMarkdownFile(file);
-              // Only process the first valid file
-              break;
-            } else {
-              showToast('Please drop a Markdown (.md) or text file', 'warning');
-            }
-          }
-        }
-      } else {
-        // Use DataTransfer interface
-        for (let i = 0; i < e.dataTransfer.files.length; i++) {
-          const file = e.dataTransfer.files[i];
-          if (file.type === 'text/markdown' || file.name.endsWith('.md') || file.name.endsWith('.markdown') || file.type === 'text/plain') {
-            importMarkdownFile(file);
-            // Only process the first valid file
-            break;
-          } else {
-            showToast('Please drop a Markdown (.md) or text file', 'warning');
-          }
-        }
-      }
-      
-      // Reset dropzone styling
-      document.body.classList.remove('drop-active');
-    }
-
-    // Save PDF settings
-    function savePDFSettings() {
-      appState.pdfSettings.filename = document.getElementById('pdf-filename').value;
-      appState.pdfSettings.format = document.getElementById('pdf-format').value;
-      appState.pdfSettings.orientation = document.getElementById('pdf-orientation').value;
-      appState.pdfSettings.margin = parseInt(document.getElementById('pdf-margin').value, 10);
-      
-      // Save to localStorage
-      saveToLocalStorage();
-      
-      showToast('PDF settings saved', 'success');
-      
-      // Close the modal
-      document.getElementById('settings-modal').classList.remove('active');
-    }
-
-    // Initialize event listeners
-    function initEventListeners() {
-      // Theme toggle
-      document.getElementById('theme-toggle').addEventListener('click', () => {
-        appState.darkMode = !appState.darkMode;
-        updateTheme();
-        saveToLocalStorage();
-      });
-      
-      // Editor input
-      const debouncedUpdate = debounce(updatePreview, 300);
-      document.getElementById('markdown-input').addEventListener('input', (e) => {
-        // Record history only if content has changed
-        if (appState.markdownContent !== e.target.value) {
-          recordHistory(e.target.value);
-        }
-        debouncedUpdate();
-      });
-      
-      // Generate PDF button
-      document.getElementById('generate-pdf-btn').addEventListener('click', generatePDF);
-      
-      // Clear button
-      document.getElementById('clear-btn').addEventListener('click', clearEditor);
-      
-      // Save markdown button
-      document.getElementById('save-markdown-btn').addEventListener('click', saveMarkdownToFile);
-      
-      // Upload button and file input
-      document.getElementById('upload-btn').addEventListener('click', () => {
-        document.getElementById('file-input').click();
-      });
-      
-      document.getElementById('file-input').addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-          importMarkdownFile(e.target.files[0]);
-        }
-      });
-      
-      // Print button
-      document.getElementById('print-btn').addEventListener('click', printPreview);
-      
-      // Settings button
-      document.getElementById('settings-btn').addEventListener('click', () => {
-        document.getElementById('settings-modal').classList.add('active');
-      });
-      
-      // Save settings button
-      document.getElementById('save-settings').addEventListener('click', savePDFSettings);
-      
-      // Keyboard shortcuts button
-      document.getElementById('keyboard-shortcuts').addEventListener('click', () => {
-        document.getElementById('keyboard-shortcuts-modal').classList.add('active');
-      });
-      
-      // Modal close buttons
-      document.querySelectorAll('.modal-close').forEach(button => {
-        button.addEventListener('click', () => {
-          document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.classList.remove('active');
-          });
-        });
-      });
-      
-      // Close modals when clicking outside
-      document.querySelectorAll('.modal-overlay').forEach(overlay => {
-        overlay.addEventListener('click', (e) => {
-          if (e.target === overlay) {
-            overlay.classList.remove('active');
-          }
-        });
-      });
-      
-      // Toolbar buttons
-      document.querySelectorAll('.toolbar-btn').forEach(button => {
-        button.addEventListener('click', () => {
-          const action = button.getAttribute('data-action');
-          handleToolbarAction(action);
-        });
-      });
-      
-      // File drop handling
-      document.body.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        document.body.classList.add('drop-active');
-      });
-      
-      document.body.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        document.body.classList.remove('drop-active');
-      });
-      
-      document.body.addEventListener('drop', handleFileDrop);
-      
-      // Keyboard shortcuts
-      document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && !e.shiftKey) {
-          switch(e.key.toLowerCase()) {
-            case 'b':
-              e.preventDefault();
-              handleToolbarAction('bold');
-              break;
-            case 'i':
-              e.preventDefault();
-              handleToolbarAction('italic');
-              break;
-            case 'k':
-              e.preventDefault();
-              handleToolbarAction('link');
-              break;
-            case 'h':
-              e.preventDefault();
-              handleToolbarAction('heading');
-              break;
-            case 'u':
-              e.preventDefault();
-              handleToolbarAction('ul');
-              break;
-            case 'o':
-              e.preventDefault();
-              handleToolbarAction('ol');
-              break;
-            case 'q':
-              e.preventDefault();
-              handleToolbarAction('quote');
-              break;
-            case 's':
-              e.preventDefault();
-              saveMarkdownToFile();
-              break;
-            case 'p':
-              e.preventDefault();
-              generatePDF();
-              break;
-            case 'z':
-              e.preventDefault();
-              undo();
-              break;
-            case 'y':
-              e.preventDefault();
-              redo();
-              break;
-          }
-        } else if (e.ctrlKey && e.shiftKey) {
-          switch(e.key.toLowerCase()) {
-            case 'c':
-              e.preventDefault();
-              handleToolbarAction('code');
-              break;
-          }
-        }
-      });
-      
-      // Auto-save interval
-      setInterval(saveToLocalStorage, 30000); // Every 30 seconds
-    }
-
-    // Initialize the application
-    function initializeApp() {
-      // Check for existing markdown in URL or localStorage
-      loadFromLocalStorage();
-      
-      // Update theme based on preference
-      updateTheme();
-      
-      // Set up event listeners
-      initEventListeners();
-      
-      // Initialize the preview
-      updatePreview();
-      
-      // Initialize history
-      recordHistory(appState.markdownContent);
-      
-      // Show welcome toast
-      showToast('Welcome to Markdown to PDF Converter!', 'success');
-    }
-
-    // Example markdown content
-    const exampleMarkdown = `# Markdown to PDF Converter 🚀
-> Transform your ideas into beautiful PDFs in seconds
-
-## About This Project
-This tool converts Markdown (including diagrams) into professional PDFs. It supports:
-- Standard Markdown syntax
-- Mermaid diagrams for graphs and schemas
-- Schema diagrams (using the 'schema' identifier)
-
-## Example Mermaid Diagram
-\`\`\`mermaid
+  <div class="mermaid">
 graph TD
     A[Start] --> B{Is it working?}
     B -- Yes --> C[Great!]
     B -- No --> D[Check the code]
     D --> B
-\`\`\`
+  </div>
 
-## Example Schema Diagram
-\`\`\`schema
-graph LR
-    Customer -->|Places order| Order
-    Order -->|Processed by| Warehouse
-    Order -->|Billed by| Accounting
-\`\`\`
+  <h3>Sequence Diagrams</h3>
 
-## Features
-- ⚡ Real-time preview
-- 🎨 Clean, modern styling
-- 📱 Responsive design
-- 🖨️ One-click PDF export
-- 💾 No server storage - everything happens in your browser
+  <div class="mermaid">
+sequenceDiagram
+    User->>Application: Type Markdown
+    Application->>Preview: Render HTML
+    User->>Application: Click Generate PDF
+    Application->>User: Download PDF
+  </div>
 
-## Markdown Support
-This converter supports:
-- Headers, lists, and tables
-- **Bold** and *italic* text
-- Code blocks with syntax highlighting
-- Blockquotes and images
-- Mermaid and Schema diagrams for graphs and schemas
+  <h3>Gantt Charts</h3>
 
----
-*Created with ❤️ by Gauthier Bros*  
-[Visit Project on GitHub](https://github.com/BrosG)`;
+  <div class="mermaid">
+gantt
+    title Development Timeline
+    dateFormat  YYYY-MM-DD
+    
+    section Planning
+    Requirements      :done,    des1, 2023-01-01, 2023-01-10
+    Design            :active,  des2, 2023-01-11, 2023-01-20
+    
+    section Development
+    Implementation    :         des3, after des2, 15d
+    Testing           :         des4, after des3, 10d
+    
+    section Deployment
+    Deployment        :         des5, after des4, 5d
+    Documentation     :         des6, after des5, 5d
+  </div>
 
-    // Set initial markdown if none exists
-    if (!localStorage.getItem('markdownContent')) {
-      document.getElementById('markdown-input').value = exampleMarkdown;
-      appState.markdownContent = exampleMarkdown;
+  <h2>📊 Feature Comparison</h2>
+
+  <table class="feature-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Basic Version</th>
+        <th>Pro Version</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Markdown to PDF</td>
+        <td>✅</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td>Real-time Preview</td>
+        <td>✅</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td>Dark Mode</td>
+        <td>✅</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td>Mermaid Diagrams</td>
+        <td>✅</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td>Custom Themes</td>
+        <td>❌</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td>Document Templates</td>
+        <td>❌</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td>Custom Fonts</td>
+        <td>❌</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td>Collaboration Tools</td>
+        <td>❌</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td>Cloud Syncing</td>
+        <td>❌</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td>API Access</td>
+        <td>❌</td>
+        <td>✅</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>💻 Technical Architecture</h2>
+
+  <div class="mermaid">
+flowchart TD
+    A[User Input] --> B[Markdown Parser]
+    B --> C[HTML Renderer]
+    C --> D[Preview Panel]
+    
+    subgraph PDF Generation
+    E[HTML2Canvas] --> F[jsPDF]
+    end
+    
+    D --> E
+    F --> G[Download PDF]
+    
+    H[Local Storage] <--> I[State Management]
+    I --> J[UI Updates]
+    
+    K[File System] --> L[Import/Export]
+  </div>
+
+  <h2>📝 Example Document</h2>
+
+  <h3>Project Status Report</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Milestone</th>
+        <th>Status</th>
+        <th>Completion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Design Phase</td>
+        <td>✅ Complete</td>
+        <td>100%</td>
+      </tr>
+      <tr>
+        <td>Backend Development</td>
+        <td>⏳ In Progress</td>
+        <td>75%</td>
+      </tr>
+      <tr>
+        <td>Frontend Implementation</td>
+        <td>⏳ In Progress</td>
+        <td>60%</td>
+      </tr>
+      <tr>
+        <td>Testing</td>
+        <td>🔜 Upcoming</td>
+        <td>0%</td>
+      </tr>
+      <tr>
+        <td>Deployment</td>
+        <td>🔜 Upcoming</td>
+        <td>0%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Team Productivity</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Team Member</th>
+        <th>Tasks Completed</th>
+        <th>Hours Logged</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Alice</td>
+        <td style="text-align: center;">15</td>
+        <td style="text-align: center;">37.5</td>
+      </tr>
+      <tr>
+        <td>Bob</td>
+        <td style="text-align: center;">12</td>
+        <td style="text-align: center;">40.0</td>
+      </tr>
+      <tr>
+        <td>Charlie</td>
+        <td style="text-align: center;">18</td>
+        <td style="text-align: center;">42.5</td>
+      </tr>
+      <tr>
+        <td>Dana</td>
+        <td style="text-align: center;">14</td>
+        <td style="text-align: center;">35.0</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>🌐 Browser Compatibility</h2>
+
+  <ul class="browser-list">
+    <li class="browser-item browser-supported">✅ Chrome (v80+)</li>
+    <li class="browser-item browser-supported">✅ Firefox (v75+)</li>
+    <li class="browser-item browser-supported">✅ Safari (v13+)</li>
+    <li class="browser-item browser-supported">✅ Edge (v80+)</li>
+    <li class="browser-item browser-unsupported">⚠️ IE (Not supported)</li>
+  </ul>
+
+  <h2>👨‍💻 Contributing</h2>
+
+  <p>Contributions are welcome! Please feel free to submit a Pull Request.</p>
+
+  <ol>
+    <li>Fork the repository</li>
+    <li>Create your feature branch (<code>git checkout -b feature/amazing-feature</code>)</li>
+    <li>Commit your changes (<code>git commit -m 'Add some amazing feature'</code>)</li>
+    <li>Push to the branch (<code>git push origin feature/amazing-feature</code>)</li>
+    <li>Open a Pull Request</li>
+  </ol>
+
+  <h2>📬 Contact</h2>
+
+  <ul>
+    <li><strong>Website</strong>: <a href="https://bros.ai">bros.ai</a></li>
+    <li><strong>Email</strong>: <a href="mailto:gauthier.bros@gmail.com">gauthier.bros@gmail.com</a></li>
+    <li><strong>Twitter</strong>: <a href="https://twitter.com/BrosGauthier">@BrosGauthier</a></li>
+    <li><strong>GitHub</strong>: <a href="https://github.com/BrosG">BrosG</a></li>
+  </ul>
+
+  <h2>📄 License</h2>
+
+  <p>This project is licensed under the MIT License - see the <a href="LICENSE">LICENSE</a> file for details.</p>
+
+  <hr>
+
+  <div class="footer">
+    <p>Made with ❤️ by <a href="https://bros.ai">Gauthier Bros</a></p>
+  </div>
+
+  <script>
+    // Initialize Mermaid for diagram rendering
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      fontFamily: 'Inter, sans-serif',
+      flowchart: {
+        curve: 'basis'
+      }
+    });
+    
+    // Check for dark mode preference and update mermaid theme
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      mermaid.initialize({
+        theme: 'dark'
+      });
     }
-
-    // Initialize the app when the DOM is ready
-    document.addEventListener('DOMContentLoaded', initializeApp);
+    
+    // Listen for changes in color scheme preference
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      location.reload(); // Simplest way to re-render mermaid diagrams with new theme
+    });
   </script>
 </body>
 </html>
