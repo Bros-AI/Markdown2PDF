@@ -177,10 +177,28 @@
       max-width: var(--content-width);
       margin: 2rem auto;
       padding: 0 1rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 550px), 1fr));
-      gap: 2rem;
+      display: flex;
+      gap: 0;
       flex: 1;
+      transition: var(--transition);
+    }
+
+    /* Resizer */
+    .resizer {
+      flex: 0 0 10px;
+      cursor: col-resize;
+      background-color: var(--gray-200);
+      transition: var(--transition);
+      z-index: 5;
+    }
+    .resizer:hover, .resizer.active {
+      background-color: var(--primary);
+    }
+    [data-theme="dark"] .resizer {
+      background-color: var(--gray-700);
+    }
+    [data-theme="dark"] .resizer:hover, [data-theme="dark"] .resizer.active {
+      background-color: var(--primary);
     }
 
     /* Editor and Preview Panels */
@@ -194,6 +212,8 @@
       height: calc(100vh - 250px);
       min-height: 450px;
       transition: var(--transition);
+      flex: 1;
+      min-width: 0;
     }
 
     [data-theme="dark"] .editor,
@@ -707,10 +727,34 @@
       color: var(--gray-300);
     }
 
+    /* Viewer Mode */
+    body.viewer-mode .header,
+    body.viewer-mode .footer,
+    body.viewer-mode .editor,
+    body.viewer-mode .resizer {
+      display: none;
+    }
+    body.viewer-mode .container {
+      margin: 0;
+      padding: 0;
+      max-width: 100%;
+      height: 100vh;
+    }
+    body.viewer-mode .preview {
+      height: 100%;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
     /* Responsiveness improvements */
     @media (max-width: 768px) {
       .container {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .resizer {
+        display: none;
       }
 
       .header-content {
@@ -1112,10 +1156,16 @@
         </div>
       </div>
     </div>
+    <div id="resizer" class="resizer" title="Drag to resize"></div>
     <div class="preview">
       <div class="panel-header">
         <span>Preview</span>
         <div>
+          <button id="viewer-mode-btn" class="btn-small btn-secondary" data-tooltip="Toggle Viewer Mode">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+            </svg>
+          </button>
           <button id="print-btn" class="btn-small btn-secondary">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 6 2 18 2 18 9"></polyline>
@@ -1229,714 +1279,6 @@
   <div class="toast-container" id="toast-container"></div>
 
   <!-- JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
-
-  <script>
-    // App State Management
-    const appState = {
-      markdownContent: '',
-      pdfSettings: {
-        filename: 'document.pdf',
-        format: 'a4',
-        orientation: 'portrait',
-        margin: 20
-      },
-      darkMode: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
-      lastSaved: null,
-      undoStack: [],
-      redoStack: [],
-      currentHistoryIndex: -1,
-      maxHistorySize: 50
-    };
-
-    // Utility Functions
-    const debounce = (func, wait) => {
-      let timeout;
-      return function executedFunction(...args) {
-        const later = () => {
-          clearTimeout(timeout);
-          func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-      };
-    };
-
-    const showToast = (message, type = 'success') => {
-      const toastContainer = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `toast toast-${type}`;
-      
-      let iconSvg = '';
-      if (type === 'success') {
-        iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
-      } else if (type === 'error') {
-        iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
-      } else if (type === 'warning') {
-        iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
-      }
-      
-      toast.innerHTML = `
-        <div class="toast-icon">${iconSvg}</div>
-        <div class="toast-message">${message}</div>
-      `;
-      
-      toastContainer.appendChild(toast);
-      
-      // Automatically remove the toast after animation
-      setTimeout(() => {
-        toast.remove();
-      }, 5000);
-    };
-
-    const saveToLocalStorage = () => {
-      try {
-        localStorage.setItem('markdownContent', appState.markdownContent);
-        localStorage.setItem('pdfSettings', JSON.stringify(appState.pdfSettings));
-        localStorage.setItem('darkMode', appState.darkMode);
-        appState.lastSaved = new Date();
-      } catch (error) {
-        console.error('Error saving to localStorage:', error);
-      }
-    };
-
-    const loadFromLocalStorage = () => {
-      try {
-        const savedContent = localStorage.getItem('markdownContent');
-        const savedSettings = localStorage.getItem('pdfSettings');
-        const savedDarkMode = localStorage.getItem('darkMode');
-        
-        if (savedContent) {
-          appState.markdownContent = savedContent;
-          document.getElementById('markdown-input').value = savedContent;
-        }
-        
-        if (savedSettings) {
-          appState.pdfSettings = JSON.parse(savedSettings);
-          // Update settings form fields
-          document.getElementById('pdf-filename').value = appState.pdfSettings.filename;
-          document.getElementById('pdf-format').value = appState.pdfSettings.format;
-          document.getElementById('pdf-orientation').value = appState.pdfSettings.orientation;
-          document.getElementById('pdf-margin').value = appState.pdfSettings.margin;
-        }
-        
-        if (savedDarkMode !== null) {
-          appState.darkMode = savedDarkMode === 'true';
-          updateTheme();
-        }
-      } catch (error) {
-        console.error('Error loading from localStorage:', error);
-      }
-    };
-
-    // History management for undo/redo
-    const recordHistory = (content) => {
-      // If we're not at the end of the history, truncate
-      if (appState.currentHistoryIndex < appState.undoStack.length - 1) {
-        appState.undoStack = appState.undoStack.slice(0, appState.currentHistoryIndex + 1);
-        appState.redoStack = [];
-      }
-      
-      // Add the new state to the history
-      appState.undoStack.push(content);
-      
-      // Limit history size
-      if (appState.undoStack.length > appState.maxHistorySize) {
-        appState.undoStack.shift();
-      }
-      
-      appState.currentHistoryIndex = appState.undoStack.length - 1;
-    };
-
-    const undo = () => {
-      if (appState.currentHistoryIndex > 0) {
-        appState.redoStack.push(appState.undoStack[appState.currentHistoryIndex]);
-        appState.currentHistoryIndex--;
-        const previousContent = appState.undoStack[appState.currentHistoryIndex];
-        document.getElementById('markdown-input').value = previousContent;
-        appState.markdownContent = previousContent;
-        updatePreview();
-      }
-    };
-
-    const redo = () => {
-      if (appState.redoStack.length > 0) {
-        appState.currentHistoryIndex++;
-        const nextContent = appState.redoStack.pop();
-        document.getElementById('markdown-input').value = nextContent;
-        appState.markdownContent = nextContent;
-        updatePreview();
-      }
-    };
-
-    // Toggle dark mode
-    const updateTheme = () => {
-      document.documentElement.setAttribute('data-theme', appState.darkMode ? 'dark' : 'light');
-      
-      // Update theme toggle icons
-      document.getElementById('sun-icon').style.display = appState.darkMode ? 'inline' : 'none';
-      document.getElementById('moon-icon').style.display = appState.darkMode ? 'none' : 'inline';
-      
-      // Update mermaid theme
-      mermaid.initialize({ 
-        theme: appState.darkMode ? 'dark' : 'default'
-      });
-      
-      // Re-render preview for theme-dependent elements
-      updatePreview();
-    };
-
-    // Initialize Mermaid
-    mermaid.initialize({ 
-      startOnLoad: false, 
-      theme: appState.darkMode ? 'dark' : 'default',
-      securityLevel: 'strict',
-      fontFamily: 'Inter, sans-serif'
-    });
-
-    // Custom renderer for marked
-    const renderer = new marked.Renderer();
-    renderer.code = function(code, language) {
-      if (language) {
-        const lang = language.toLowerCase();
-        if (lang === 'mermaid') {
-          return `<div class="mermaid">${code}</div>`;
-        }
-        if (lang === 'schema') {
-          return `<div class="mermaid schema-diagram">${code}</div>`;
-        }
-      }
-      return `<pre><code class="${language ? 'language-' + language : ''}">${code}</code></pre>`;
-    };
-
-    marked.setOptions({
-      renderer: renderer,
-      breaks: true,
-      gfm: true,
-      headerIds: true,
-      mangle: false,
-      pedantic: false,
-      sanitize: false,
-      smartLists: true,
-      smartypants: true,
-      xhtml: true
-    });
-
-    // Helper function to wait
-    function wait(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    // Update preview panel and render Mermaid diagrams
-    function updatePreview() {
-      const markdownInput = document.getElementById('markdown-input');
-      const previewContent = document.getElementById('preview-content');
-      const markdown = markdownInput.value;
-      
-      appState.markdownContent = markdown;
-      
-      try {
-        previewContent.innerHTML = marked.parse(markdown);
-        
-        // Render Mermaid diagrams
-        try {
-          mermaid.init(undefined, previewContent.querySelectorAll('.mermaid'));
-        } catch (e) {
-          console.error('Error rendering Mermaid diagrams:', e);
-        }
-        
-        // Auto-save to localStorage
-        saveToLocalStorage();
-        
-      } catch (error) {
-        console.error('Error updating preview:', error);
-        showToast('Error rendering markdown. Check for syntax errors.', 'error');
-      }
-    }
-
-    // Generate PDF with current settings
-    async function generatePDF() {
-      const previewContent = document.getElementById('preview-content');
-      const button = document.getElementById('generate-pdf-btn');
-      
-      if (previewContent.innerHTML.trim() === '') {
-        showToast('Please add some Markdown content first', 'warning');
-        return;
-      }
-      
-      try {
-        // Change button state
-        button.disabled = true;
-        const originalText = button.innerHTML;
-        button.innerHTML = `<div class="spinner"></div> Generating...`;
-        
-        // Apply current PDF settings
-        const pdfOptions = {
-          margin: [appState.pdfSettings.margin, appState.pdfSettings.margin],
-          filename: appState.pdfSettings.filename,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { 
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            allowTaint: true
-          },
-          jsPDF: { 
-            unit: 'mm', 
-            format: appState.pdfSettings.format, 
-            orientation: appState.pdfSettings.orientation
-          },
-          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-        };
-        
-        // Wait for diagrams to render completely
-        await wait(1000);
-        
-        // Generate PDF
-        await html2pdf().set(pdfOptions).from(previewContent).save();
-        
-        // Reset button
-        button.innerHTML = originalText;
-        button.disabled = false;
-        
-        // Show success message
-        showToast('PDF generated successfully!', 'success');
-        
-      } catch (error) {
-        console.error('Error generating PDF:', error);
-        button.innerHTML = originalText;
-        button.disabled = false;
-        showToast('Error generating PDF. Please try again.', 'error');
-      }
-    }
-
-    // Clear editor and reset history
-    function clearEditor() {
-      if (document.getElementById('markdown-input').value.trim() !== '') {
-        if (confirm('Are you sure you want to clear the editor? All content will be lost.')) {
-          document.getElementById('markdown-input').value = '';
-          appState.markdownContent = '';
-          appState.undoStack = [''];
-          appState.redoStack = [];
-          appState.currentHistoryIndex = 0;
-          updatePreview();
-          showToast('Editor cleared', 'success');
-        }
-      } else {
-        showToast('Editor is already empty', 'info');
-      }
-    }
-
-    // Save markdown to file
-    function saveMarkdownToFile() {
-      const content = document.getElementById('markdown-input').value;
-      
-      if (content.trim() === '') {
-        showToast('Please add some Markdown content first', 'warning');
-        return;
-      }
-      
-      const filename = appState.pdfSettings.filename.replace('.pdf', '.md');
-      const blob = new Blob([content], { type: 'text/markdown' });
-      const url = URL.createObjectURL(blob);
-      
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      showToast('Markdown file saved', 'success');
-    }
-
-    // Import markdown from file
-    function importMarkdownFile(file) {
-      const reader = new FileReader();
-      
-      reader.onload = function(e) {
-        const content = e.target.result;
-        document.getElementById('markdown-input').value = content;
-        appState.markdownContent = content;
-        recordHistory(content);
-        updatePreview();
-        showToast('File imported successfully', 'success');
-      };
-      
-      reader.onerror = function() {
-        showToast('Error reading file', 'error');
-      };
-      
-      reader.readAsText(file);
-    }
-
-    // Print preview
-    function printPreview() {
-      window.print();
-    }
-
-    // Handle toolbar button clicks
-    function handleToolbarAction(action) {
-      const textarea = document.getElementById('markdown-input');
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = textarea.value.substring(start, end);
-      let replacement = '';
-      
-      switch(action) {
-        case 'bold':
-          replacement = `**${selectedText || 'bold text'}**`;
-          break;
-        case 'italic':
-          replacement = `*${selectedText || 'italic text'}*`;
-          break;
-        case 'heading':
-          replacement = `\n## ${selectedText || 'Heading'}\n`;
-          break;
-        case 'link':
-          replacement = `[${selectedText || 'link text'}](https://example.com)`;
-          break;
-        case 'ul':
-          replacement = selectedText ? selectedText.split('\n').map(line => `- ${line}`).join('\n') : '- List item';
-          break;
-        case 'ol':
-          replacement = selectedText ? selectedText.split('\n').map((line, i) => `${i+1}. ${line}`).join('\n') : '1. List item';
-          break;
-        case 'code':
-          replacement = `\`\`\`\n${selectedText || 'code'}\n\`\`\``;
-          break;
-        case 'quote':
-          replacement = selectedText ? selectedText.split('\n').map(line => `> ${line}`).join('\n') : '> Blockquote';
-          break;
-        case 'table':
-          replacement = `| Header 1 | Header 2 | Header 3 |\n| -------- | -------- | -------- |\n| Cell 1   | Cell 2   | Cell 3   |\n| Cell 4   | Cell 5   | Cell 6   |`;
-          break;
-        case 'mermaid':
-          replacement = `\`\`\`mermaid\ngraph TD\n    A[Start] --> B{Decision}\n    B -->|Yes| C[Do Something]\n    B -->|No| D[Do Something Else]\n    C --> E[End]\n    D --> E\n\`\`\``;
-          break;
-      }
-      
-      // Insert the replacement text
-      textarea.value = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
-      
-      // Update the cursor position
-      const newCursorPos = start + replacement.length;
-      textarea.selectionStart = newCursorPos;
-      textarea.selectionEnd = newCursorPos;
-      
-      // Focus the textarea
-      textarea.focus();
-      
-      // Update preview
-      appState.markdownContent = textarea.value;
-      recordHistory(textarea.value);
-      updatePreview();
-    }
-
-    // Handle file drag and drop
-    function handleFileDrop(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      if (e.dataTransfer.items) {
-        // Use DataTransferItemList interface
-        for (let i = 0; i < e.dataTransfer.items.length; i++) {
-          if (e.dataTransfer.items[i].kind === 'file') {
-            const file = e.dataTransfer.items[i].getAsFile();
-            if (file.type === 'text/markdown' || file.name.endsWith('.md') || file.name.endsWith('.markdown') || file.type === 'text/plain') {
-              importMarkdownFile(file);
-              // Only process the first valid file
-              break;
-            } else {
-              showToast('Please drop a Markdown (.md) or text file', 'warning');
-            }
-          }
-        }
-      } else {
-        // Use DataTransfer interface
-        for (let i = 0; i < e.dataTransfer.files.length; i++) {
-          const file = e.dataTransfer.files[i];
-          if (file.type === 'text/markdown' || file.name.endsWith('.md') || file.name.endsWith('.markdown') || file.type === 'text/plain') {
-            importMarkdownFile(file);
-            // Only process the first valid file
-            break;
-          } else {
-            showToast('Please drop a Markdown (.md) or text file', 'warning');
-          }
-        }
-      }
-      
-      // Reset dropzone styling
-      document.body.classList.remove('drop-active');
-    }
-
-    // Save PDF settings
-    function savePDFSettings() {
-      appState.pdfSettings.filename = document.getElementById('pdf-filename').value;
-      appState.pdfSettings.format = document.getElementById('pdf-format').value;
-      appState.pdfSettings.orientation = document.getElementById('pdf-orientation').value;
-      appState.pdfSettings.margin = parseInt(document.getElementById('pdf-margin').value, 10);
-      
-      // Save to localStorage
-      saveToLocalStorage();
-      
-      showToast('PDF settings saved', 'success');
-      
-      // Close the modal
-      document.getElementById('settings-modal').classList.remove('active');
-    }
-
-    // Initialize event listeners
-    function initEventListeners() {
-      // Theme toggle
-      document.getElementById('theme-toggle').addEventListener('click', () => {
-        appState.darkMode = !appState.darkMode;
-        updateTheme();
-        saveToLocalStorage();
-      });
-      
-      // Editor input
-      const debouncedUpdate = debounce(updatePreview, 300);
-      document.getElementById('markdown-input').addEventListener('input', (e) => {
-        // Record history only if content has changed
-        if (appState.markdownContent !== e.target.value) {
-          recordHistory(e.target.value);
-        }
-        debouncedUpdate();
-      });
-      
-      // Generate PDF button
-      document.getElementById('generate-pdf-btn').addEventListener('click', generatePDF);
-      
-      // Clear button
-      document.getElementById('clear-btn').addEventListener('click', clearEditor);
-      
-      // Save markdown button
-      document.getElementById('save-markdown-btn').addEventListener('click', saveMarkdownToFile);
-      
-      // Upload button and file input
-      document.getElementById('upload-btn').addEventListener('click', () => {
-        document.getElementById('file-input').click();
-      });
-      
-      document.getElementById('file-input').addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-          importMarkdownFile(e.target.files[0]);
-        }
-      });
-      
-      // Print button
-      document.getElementById('print-btn').addEventListener('click', printPreview);
-      
-      // Settings button
-      document.getElementById('settings-btn').addEventListener('click', () => {
-        document.getElementById('settings-modal').classList.add('active');
-      });
-      
-      // Save settings button
-      document.getElementById('save-settings').addEventListener('click', savePDFSettings);
-      
-      // Keyboard shortcuts button
-      document.getElementById('keyboard-shortcuts').addEventListener('click', () => {
-        document.getElementById('keyboard-shortcuts-modal').classList.add('active');
-      });
-      
-      // Modal close buttons
-      document.querySelectorAll('.modal-close').forEach(button => {
-        button.addEventListener('click', () => {
-          document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.classList.remove('active');
-          });
-        });
-      });
-      
-      // Close modals when clicking outside
-      document.querySelectorAll('.modal-overlay').forEach(overlay => {
-        overlay.addEventListener('click', (e) => {
-          if (e.target === overlay) {
-            overlay.classList.remove('active');
-          }
-        });
-      });
-      
-      // Toolbar buttons
-      document.querySelectorAll('.toolbar-btn').forEach(button => {
-        button.addEventListener('click', () => {
-          const action = button.getAttribute('data-action');
-          handleToolbarAction(action);
-        });
-      });
-      
-      // File drop handling
-      document.body.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        document.body.classList.add('drop-active');
-      });
-      
-      document.body.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        document.body.classList.remove('drop-active');
-      });
-      
-      document.body.addEventListener('drop', handleFileDrop);
-      
-      // Keyboard shortcuts
-      document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && !e.shiftKey) {
-          switch(e.key.toLowerCase()) {
-            case 'b':
-              e.preventDefault();
-              handleToolbarAction('bold');
-              break;
-            case 'i':
-              e.preventDefault();
-              handleToolbarAction('italic');
-              break;
-            case 'k':
-              e.preventDefault();
-              handleToolbarAction('link');
-              break;
-            case 'h':
-              e.preventDefault();
-              handleToolbarAction('heading');
-              break;
-            case 'u':
-              e.preventDefault();
-              handleToolbarAction('ul');
-              break;
-            case 'o':
-              e.preventDefault();
-              handleToolbarAction('ol');
-              break;
-            case 'q':
-              e.preventDefault();
-              handleToolbarAction('quote');
-              break;
-            case 's':
-              e.preventDefault();
-              saveMarkdownToFile();
-              break;
-            case 'p':
-              e.preventDefault();
-              generatePDF();
-              break;
-            case 'z':
-              e.preventDefault();
-              undo();
-              break;
-            case 'y':
-              e.preventDefault();
-              redo();
-              break;
-          }
-        } else if (e.ctrlKey && e.shiftKey) {
-          switch(e.key.toLowerCase()) {
-            case 'c':
-              e.preventDefault();
-              handleToolbarAction('code');
-              break;
-          }
-        }
-      });
-      
-      // Auto-save interval
-      setInterval(saveToLocalStorage, 30000); // Every 30 seconds
-      
-      // Handle beforeunload event to warn about unsaved changes
-      window.addEventListener('beforeunload', (e) => {
-        if (appState.markdownContent !== '' && (appState.lastSaved === null || new Date() - appState.lastSaved > 30000)) {
-          // Set the message to be displayed in the confirmation dialog
-          const message = 'You have unsaved changes. Are you sure you want to leave?';
-          (e || window.event).returnValue = message;
-          return message;
-        }
-      });
-    }
-
-    // Example markdown content
-    const exampleMarkdown = `# Markdown to PDF Converter 🚀
-> Transform your ideas into beautiful PDFs in seconds
-
-## About This Project
-This tool converts Markdown (including diagrams) into professional PDFs. It supports:
-- Standard Markdown syntax
-- Mermaid diagrams for graphs and schemas
-- Tables, lists, and code blocks
-
-## Example Mermaid Diagram
-\`\`\`mermaid
-graph TD
-    A[Start] --> B{Is it working?}
-    B -- Yes --> C[Great!]
-    B -- No --> D[Check the code]
-    D --> B
-\`\`\`
-
-## Features
-- ⚡ Real-time preview
-- 🎨 Clean, modern styling
-- 📱 Responsive design
-- 🖨️ One-click PDF export
-- 💾 Auto-save functionality
-
-## Example Table
-
-| Feature | Description | Status |
-|---------|-------------|--------|
-| Markdown Support | Renders standard markdown | ✅ |
-| Mermaid Diagrams | Flowcharts and sequences | ✅ |
-| PDF Export | Generate downloadable PDF | ✅ |
-| Dark Mode | For comfortable night editing | ✅ |
-| Keyboard Shortcuts | Faster editing | ✅ |
-
-## Code Example
-
-\`\`\`javascript
-// Simple JavaScript function
-function greet(name) {
-  return \`Hello, \${name}!\`;
-}
-
-console.log(greet('World'));
-\`\`\`
-
----
-*Created with ❤️ by [Gauthier Bros](https://bros.ai) | Contact: gauthier.bros@gmail.com*`;
-
-    // Initialize the application
-    function initializeApp() {
-      // Check for existing markdown in localStorage
-      loadFromLocalStorage();
-      
-      // Update theme based on preference
-      updateTheme();
-      
-      // Set up event listeners
-      initEventListeners();
-      
-      // Set initial example markdown if no content
-      if (!appState.markdownContent) {
-        document.getElementById('markdown-input').value = exampleMarkdown;
-        appState.markdownContent = exampleMarkdown;
-      }
-      
-      // Initialize the preview
-      updatePreview();
-      
-      // Initialize history
-      recordHistory(appState.markdownContent);
-      
-      // Show welcome toast
-      showToast('Welcome to Markdown to PDF Converter!', 'success');
-    }
-
-    // Initialize the app when the DOM is ready
-    document.addEventListener('DOMContentLoaded', initializeApp);
-  </script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

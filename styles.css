@@ -1,0 +1,316 @@
+/* General Body and Layout Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    line-height: 1.6;
+    color: #24292e;
+    background-color: #f6f8fa;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    width: 100%;
+    max-width: 1400px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1.title {
+    font-size: 24px;
+    color: #24292e;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    height: calc(100vh - 100px); /* Adjusted for header */
+}
+
+#editor-container, #preview-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid #d1d5da;
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    min-width: 0; /* Allow panels to shrink beyond their content's intrinsic size */
+}
+
+/* Resizer Handle */
+#resizer {
+    flex: 0 0 10px;
+    cursor: col-resize;
+    user-select: none;
+    background: #f6f8fa; /* Match body background */
+    position: relative;
+}
+
+#resizer:hover::before {
+    background-color: #0366d6;
+}
+
+#resizer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 4px;
+    width: 2px;
+    background-color: #d1d5da;
+    transition: background-color 0.2s ease;
+}
+
+/* Viewer Mode for full-screen preview */
+body.viewer-mode #editor-container,
+body.viewer-mode #resizer {
+    display: none;
+}
+
+body.viewer-mode #preview-container {
+    flex-basis: 100%;
+    max-width: 100%;
+}
+
+.panel-header {
+    padding: 8px 12px;
+    background-color: #f6f8fa;
+    border-bottom: 1px solid #d1d5da;
+    font-weight: 600;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+#editor {
+    flex: 1;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 15px;
+    border: none;
+    resize: none;
+    outline: none;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+#preview {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Markdown Content Styling */
+#preview h1, #preview h2, #preview h3, #preview h4, #preview h5, #preview h6 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+#preview h1 {
+    padding-bottom: 0.3em;
+    font-size: 2em;
+    border-bottom: 1px solid #eaecef;
+}
+
+#preview h2 {
+    padding-bottom: 0.3em;
+    font-size: 1.5em;
+    border-bottom: 1px solid #eaecef;
+}
+
+#preview h3 {
+    font-size: 1.25em;
+}
+
+#preview h4 {
+    font-size: 1em;
+}
+
+#preview h5 {
+    font-size: 0.875em;
+}
+
+#preview h6 {
+    font-size: 0.85em;
+    color: #6a737d;
+}
+
+#preview p {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+#preview a {
+    color: #0366d6;
+    text-decoration: none;
+}
+
+#preview a:hover {
+    text-decoration: underline;
+}
+
+#preview ul, #preview ol {
+    padding-left: 2em;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+#preview li {
+    margin-bottom: 0.25em;
+}
+
+#preview blockquote {
+    margin: 0 0 16px 0;
+    padding: 0 1em;
+    color: #6a737d;
+    border-left: 0.25em solid #dfe2e5;
+}
+
+#preview code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 85%;
+    padding: 0.2em 0.4em;
+    margin: 0;
+    background-color: rgba(27,31,35,0.05);
+    border-radius: 3px;
+}
+
+#preview pre {
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f6f8fa;
+    border-radius: 3px;
+    margin-bottom: 16px;
+    word-wrap: normal;
+}
+
+#preview pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+}
+
+#preview img {
+    max-width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+#preview table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+    margin-bottom: 16px;
+    display: block;
+    overflow: auto;
+}
+
+#preview th, #preview td {
+    padding: 6px 13px;
+    border: 1px solid #dfe2e5;
+}
+
+#preview th {
+    font-weight: 600;
+}
+
+#preview tr {
+    background-color: #fff;
+    border-top: 1px solid #c6cbd1;
+}
+
+#preview tr:nth-child(2n) {
+    background-color: #f6f8fa;
+}
+
+#preview hr {
+    height: 0.25em;
+    padding: 0;
+    margin: 24px 0;
+    background-color: #e1e4e8;
+    border: 0;
+}
+
+/* Mermaid diagram support */
+.mermaid {
+    text-align: center;
+    margin-bottom: 16px;
+    background-color: #fff; /* Ensure diagrams have a white background if needed */
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+.controls button {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #24292e;
+    background-color: #fafbfc;
+    border: 1px solid rgba(27,31,35,0.15);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.controls button:hover {
+    background-color: #f3f4f6;
+}
+
+.controls button.primary {
+    color: #fff;
+    background-color: #2ea44f;
+    border-color: rgba(27,31,35,0.15);
+}
+
+.controls button.primary:hover {
+    background-color: #2c974b;
+}
+
+/* Print-specific styles for PDF generation */
+@media print {
+    body {
+        padding: 0;
+        background-color: #fff;
+    }
+    header, .container, .controls {
+        display: none;
+    }
+    #preview-container {
+        border: none;
+        box-shadow: none;
+    }
+    #preview {
+        display: block;
+        padding: 0;
+        overflow: visible;
+    }
+    /* Avoid page breaks inside code blocks and blockquotes */
+    pre, blockquote {
+        page-break-inside: avoid;
+    }
+    /* Ensure headings don't get separated from the following paragraph */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+    }
+}
