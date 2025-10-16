@@ -5,6 +5,9 @@
  * keeping the DOM manipulation logic separate from the business logic.
  */
 
+import { generatePdf } from './pdf-generator.js';
+import { initializeMarkdownServices, updateMermaidTheme, parseMarkdown, renderMermaidDiagrams } from './markdown-service.js';
+
 // --- DOM Element References ---
 export const elements = {
     markdownInput: document.getElementById('markdown-input'),
@@ -250,6 +253,81 @@ console.log(greet('World'));
 *Created with ❤️ by [Gauthier Bros](https://bros.ai) | Contact: gauthier.bros@gmail.com*`;
 }
 
+// --- Dynamic Element Creation ---
+function createModalElements() {
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = `
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal-overlay">
+            <div class="modal-content">
+                <button class="modal-close" aria-label="Close settings modal">&times;</button>
+                <h2>PDF Settings</h2>
+                <form id="pdf-settings-form">
+                    <div class="form-group">
+                        <label for="pdf-filename">Filename</label>
+                        <input type="text" id="pdf-filename" placeholder="document.pdf">
+                    </div>
+                    <div class="form-group">
+                        <label for="pdf-format">Page Format</label>
+                        <select id="pdf-format">
+                            <option value="a4">A4</option>
+                            <option value="letter">Letter</option>
+                            <option value="legal">Legal</option>
+                            <option value="tabloid">Tabloid</option>
+                            <option value="a3">A3</option>
+                            <option value="a5">A5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pdf-orientation">Orientation</label>
+                        <select id="pdf-orientation">
+                            <option value="portrait">Portrait</option>
+                            <option value="landscape">Landscape</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pdf-margin">Margin (mm)</label>
+                        <input type="number" id="pdf-margin" value="20" min="0" max="100">
+                    </div>
+                    <button type="button" id="save-settings" class="btn btn-primary">Save Settings</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Keyboard Shortcuts Modal -->
+        <div id="keyboard-shortcuts-modal" class="modal-overlay">
+            <div class="modal-content">
+                <button class="modal-close" aria-label="Close keyboard shortcuts modal">&times;</button>
+                <h2>Keyboard Shortcuts</h2>
+                <ul class="shortcuts-list">
+                    <li><strong>Ctrl/Cmd + B:</strong> Bold</li>
+                    <li><strong>Ctrl/Cmd + I:</strong> Italic</li>
+                    <li><strong>Ctrl/Cmd + K:</strong> Link</li>
+                    <li><strong>Ctrl/Cmd + H:</strong> Heading</li>
+                    <li><strong>Ctrl/Cmd + U:</strong> Unordered List</li>
+                    <li><strong>Ctrl/Cmd + O:</strong> Ordered List</li>
+                    <li><strong>Ctrl/Cmd + Q:</strong> Blockquote</li>
+                    <li><strong>Ctrl/Cmd + Shift + C:</strong> Code Block</li>
+                    <li><strong>Ctrl/Cmd + S:</strong> Save as Markdown</li>
+                    <li><strong>Ctrl/Cmd + P:</strong> Generate PDF</li>
+                </ul>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modalContainer);
+
+    // Re-populate modal-related elements
+    elements.settingsModal = document.getElementById('settings-modal');
+    elements.keyboardShortcutsModal = document.getElementById('keyboard-shortcuts-modal');
+    elements.modalOverlays = document.querySelectorAll('.modal-overlay');
+    elements.modalCloseBtns = document.querySelectorAll('.modal-close');
+    elements.saveSettingsBtn = document.getElementById('save-settings');
+    elements.pdfFilenameInput = document.getElementById('pdf-filename');
+    elements.pdfFormatSelect = document.getElementById('pdf-format');
+    elements.pdfOrientationSelect = document.getElementById('pdf-orientation');
+    elements.pdfMarginInput = document.getElementById('pdf-margin');
+}
+
 // --- Event Listener Initialization ---
 export function initializeEventListeners(handlers) {
     elements.themeToggle.addEventListener('click', handlers.onThemeToggle);
@@ -372,4 +450,125 @@ export function initializeEventListeners(handlers) {
             }
         }
     });
+}
+
+// --- Application Initialization ---
+export function initializeApp() {
+    // Create dynamic elements that were previously in index.html
+    createModalElements();
+
+    // Application state
+    let state = {
+        markdownContent: '',
+        pdfSettings: {},
+        darkMode: false,
+    };
+
+    // --- Core Functions ---
+    const updatePreview = (content) => {
+        const html = parseMarkdown(content);
+        elements.previewContent.innerHTML = html;
+        renderMermaidDiagrams();
+    };
+
+    // --- Event Handlers ---
+    const handlers = {
+        onMarkdownInput: (content) => {
+            state.markdownContent = content;
+            updatePreview(content);
+            savePreferences(state);
+        },
+        onThemeToggle: () => {
+            state.darkMode = !state.darkMode;
+            updateThemeUI(state.darkMode);
+            updateMermaidTheme(state.darkMode);
+            savePreferences(state);
+        },
+        onGeneratePdf: () => {
+            generatePdf(elements.previewContent, state.pdfSettings, showToast);
+        },
+        onClearEditor: () => {
+            if (confirm('Are you sure you want to clear the editor?')) {
+                const newContent = '';
+                state.markdownContent = newContent;
+                updateEditorContent(newContent);
+                updatePreview(newContent);
+                savePreferences(state);
+                showToast('Editor cleared', 'info');
+            }
+        },
+        onSaveMarkdown: () => {
+            try {
+                const blob = new Blob([state.markdownContent], { type: 'text/markdown;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'document.md';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('Markdown file saved', 'success');
+            } catch (error) {
+                console.error('Error saving markdown file:', error);
+                showToast('Could not save file', 'error');
+            }
+        },
+        onFileUpload: (file) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const content = e.target.result;
+                state.markdownContent = content;
+                updateEditorContent(content);
+                updatePreview(content);
+                savePreferences(state);
+                showToast('File loaded successfully', 'success');
+            };
+            reader.onerror = () => {
+                showToast('Error reading file', 'error');
+            };
+            reader.readAsText(file);
+        },
+        onPrint: () => {
+            window.print();
+        },
+        onSettingsSave: (newSettings) => {
+            state.pdfSettings = newSettings;
+            savePreferences(state);
+        },
+        onFileDrop: (e) => {
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                const file = e.dataTransfer.files[0];
+                if (file.type === 'text/markdown' || file.name.endsWith('.md')) {
+                    handlers.onFileUpload(file);
+                } else {
+                    showToast('Please drop a Markdown file (.md)', 'warning');
+                }
+                e.dataTransfer.clearData();
+            }
+        },
+        onUndo: () => { showToast("Undo not implemented", "info"); },
+        onRedo: () => { showToast("Redo not implemented", "info"); },
+    };
+
+    // --- Initialization Logic ---
+
+    // Load initial state from localStorage
+    const loadedPrefs = loadPreferences();
+    state.pdfSettings = loadedPrefs.pdfSettings;
+    state.darkMode = loadedPrefs.darkMode;
+    state.markdownContent = loadedPrefs.markdownContent || getDefaultMarkdown();
+
+    // Initialize services
+    initializeMarkdownServices();
+
+    // Set up initial UI
+    updateThemeUI(state.darkMode);
+    updateMermaidTheme(state.darkMode);
+    updatePdfSettingsForm(state.pdfSettings);
+    updateEditorContent(state.markdownContent);
+    updatePreview(state.markdownContent);
+
+    // Attach all event listeners
+    initializeEventListeners(handlers);
 }

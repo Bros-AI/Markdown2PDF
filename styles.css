@@ -314,3 +314,290 @@ body.viewer-mode #preview-container {
         page-break-after: avoid;
     }
 }
+
+/* Toolbar */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 5px;
+    background-color: #f6f8fa;
+    border-bottom: 1px solid #d1d5da;
+}
+
+.toolbar button {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+}
+
+.toolbar button:hover {
+    background-color: #e1e4e8;
+    border-color: #d1d5da;
+}
+
+.toolbar select {
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #d1d5da;
+    background-color: #fff;
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 600px;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.modal-body {
+    padding: 2px 16px;
+}
+
+.modal-footer {
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+    text-align: right;
+}
+
+/* Toast Notification */
+#toast {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1001; /* Higher than modal */
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+    opacity: 0;
+    transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
+
+#toast.show {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s linear;
+}
+
+/* Dark Theme */
+body.dark-mode {
+    background-color: #0d1117;
+    color: #c9d1d9;
+}
+
+body.dark-mode header,
+body.dark-mode .panel-header,
+body.dark-mode #resizer {
+    background-color: #161b22;
+}
+
+body.dark-mode h1.title {
+    color: #c9d1d9;
+}
+
+body.dark-mode #editor-container,
+body.dark-mode #preview-container {
+    background-color: #0d1117;
+    border-color: #30363d;
+}
+
+body.dark-mode #editor {
+    background-color: #0d1117;
+    color: #c9d1d9;
+}
+
+body.dark-mode #resizer::before {
+    background-color: #30363d;
+}
+
+body.dark-mode #resizer:hover::before {
+    background-color: #58a6ff;
+}
+
+body.dark-mode .panel-header {
+    border-bottom-color: #30363d;
+}
+
+/* Dark mode markdown styles */
+body.dark-mode #preview h1,
+body.dark-mode #preview h2 {
+    border-bottom-color: #30363d;
+}
+
+body.dark-mode #preview h6 {
+    color: #8b949e;
+}
+
+body.dark-mode #preview a {
+    color: #58a6ff;
+}
+
+body.dark-mode #preview blockquote {
+    color: #8b949e;
+    border-left-color: #30363d;
+}
+
+body.dark-mode #preview code {
+    background-color: rgba(110,118,129,0.4);
+}
+
+body.dark-mode #preview pre {
+    background-color: #161b22;
+}
+
+body.dark-mode #preview pre code {
+    background-color: transparent;
+}
+
+body.dark-mode #preview img {
+    background-color: #0d1117;
+}
+
+body.dark-mode #preview table,
+body.dark-mode #preview th,
+body.dark-mode #preview td {
+    border-color: #30363d;
+}
+
+body.dark-mode #preview tr {
+    background-color: #0d1117;
+    border-top-color: #21262d;
+}
+
+body.dark-mode #preview tr:nth-child(2n) {
+    background-color: #161b22;
+}
+
+body.dark-mode #preview hr {
+    background-color: #30363d;
+}
+
+/* Dark mode controls */
+body.dark-mode .controls button {
+    color: #c9d1d9;
+    background-color: #21262d;
+    border-color: #30363d;
+}
+
+body.dark-mode .controls button:hover {
+    background-color: #30363d;
+    border-color: #8b949e;
+}
+
+body.dark-mode .controls button.primary {
+    color: #fff;
+    background-color: #238636;
+    border-color: rgba(240,246,252,0.1);
+}
+
+body.dark-mode .controls button.primary:hover {
+    background-color: #2ea043;
+}
+
+/* Dark mode modal */
+body.dark-mode .modal-content {
+    background-color: #161b22;
+    border-color: #30363d;
+}
+
+body.dark-mode .modal-header {
+    border-bottom-color: #30363d;
+}
+
+body.dark-mode .modal-footer {
+    border-top-color: #30363d;
+}
+
+body.dark-mode .close-button {
+    color: #8b949e;
+}
+
+body.dark-mode .close-button:hover,
+body.dark-mode .close-button:focus {
+    color: #c9d1d9;
+}
+
+/* Dark mode toolbar */
+body.dark-mode .toolbar {
+    background-color: #161b22;
+    border-bottom-color: #30363d;
+}
+
+body.dark-mode .toolbar button {
+    color: #c9d1d9;
+}
+
+body.dark-mode .toolbar button:hover {
+    background-color: #30363d;
+    border-color: #8b949e;
+}
+
+body.dark-mode .toolbar select {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    border-color: #30363d;
+}
